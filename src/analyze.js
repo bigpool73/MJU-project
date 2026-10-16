@@ -23,7 +23,7 @@
   const SHORT_SHARED = 3;
   const SHORT_MASS = 2;
 
-  const REL_GAIN = 3.0;
+  const REL_GAIN = 2.6;
   const REUSE_MIN = 0.45;    // 턴의 문장이 본문 문장에 이만큼 이상 들어 있으면 옮겨 쓴 것으로 보고 연관도의 바닥을 올린다
   const REUSE_CAP = 0.6;     // 옮겨 쓴 흔적만으로 올릴 수 있는 연관도의 상한: 주제어 점수가 더 높으면 그쪽이 순위를 가른다
   const REL_SMOOTH = 2;
@@ -334,7 +334,7 @@
 
   /**
    * 코드는 한 줄이 너무 짧아(조각 서너 개) 줄 단위로는 겹침을 판단할 수 없다.
-   * 코드펜스 안이거나 한글 없이 코드 기호가 있는 줄이 이어지면 한 덩어리로 묶어 하나의 문장처럼 다룬다.
+   * 코드펜스 안이거나 한글 없이 코드 기호가 있는 줄(과 표의 행)이 이어지면 한 덩어리로 묶어 하나의 문장처럼 다룬다.
    */
   function mergeCode(text, pieces) {
     const out = [];
@@ -347,7 +347,7 @@
       const line = text.slice(a, b);
       let code;
       if (/^(?:```|~~~)/.test(line)) { inFence = !inFence; code = true; }
-      else if (inFence) code = true;
+      else if (inFence || line[0] === '|') code = true; // 표의 행도 한 줄로는 조각이 몇 개뿐이라 덩어리로 묶는다
       else if (HANGUL.test(line) || LIST_MARK.test(line)) code = false;
       else {
         code = CODE_HINT.test(line) || /^(?: {2,}|\t)/.test(text.slice(ls, a));
@@ -377,6 +377,36 @@
     }
     if (pending >= 0) out.push({ start: pending, end: lastEnd });
     return out;
+  }
+
+  // 자모가 분리된(NFD) 입력도 NFC와 같게 나누기 위한 조각: 앞 글자와 합쳐질 수 있는 낱자모·결합 부호는 앞 조각에 붙는다
+  const SEG_RE = /[^\p{M}\u1161-\u1175\u11a8-\u11c2][\p{M}\u1161-\u1175\u11a8-\u11c2]*|[\p{M}\u1161-\u1175\u11a8-\u11c2]+/gu;
+
+  /**
+   * 문장 구간. 오프셋은 항상 입력 text 기준이다. NFD 입력은 NFC로 합친 문자열에서 나눈 뒤 원문 오프셋으로 되돌린다:
+   * 종결어미 판정이 완성형 음절의 받침을 보기 때문이다.
+   */
+  function splitSentences(text) {
+    const nfc = text.normalize('NFC');
+    if (nfc === text) return sentenceSpans(text);
+    const spans = sentenceSpans(nfc);
+    const o = [];
+    const n = [];
+    let ni = 0;
+    for (const m of text.matchAll(SEG_RE)) { o.push(m.index); n.push(ni); ni += m[0].normalize('NFC').length; }
+    o.push(text.length);
+    n.push(ni);
+    if (ni !== nfc.length) return sentenceSpans(text);
+    const find = (x) => {
+      let lo = 0;
+      let hi = n.length - 1;
+      while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (n[mid] <= x) lo = mid; else hi = mid - 1; }
+      return lo;
+    };
+    return spans.map(({ start, end }) => {
+      const b = find(end);
+      return { start: o[find(start)], end: n[b] === end ? o[b] : o[Math.min(b + 1, o.length - 1)] };
+    });
   }
 
   // ---------------------------------------------------------------- 의도 분류
@@ -441,8 +471,8 @@
           convId: cid,
           convIndex: ci,
           index: ti,
-          prompt: str(t && t.prompt).slice(0, MAX_TEXT),
-          response: str(t && t.response).slice(0, MAX_TEXT),
+          prompt: str(t && t.prompt).slice(0, MAX_TEXT).normalize('NFC'),
+          response: str(t && t.response).slice(0, MAX_TEXT).normalize('NFC'),
           chars: str(t && t.prompt).length + str(t && t.response).length,
         });
       });
@@ -467,12 +497,12 @@
     const toks = tokenize(normalize(body), false);
     const counts = new Map();
     for (const g of toks) counts.set(g, (counts.get(g) || 0) + 1);
-    const anchor = Math.max(1.5, toks.length / 500);
+    const anchor = Math.max(2, toks.length / 500);
     const sal = new Map();
     for (const [g, c] of counts) sal.set(g, Math.max(0.15, Math.min(1, Math.pow(c / anchor, 1.5))));
     for (const g of tokenize(normalize(title + '\n' + brief), false)) sal.set(g, 1);
-    // 참조 어휘가 작을수록 우연히 겹칠 확률이 낮으므로 증거 문턱도 낮춘다 (어휘 600개 이상이면 최대)
-    const scale = Math.min(1, sal.size / 600);
+    // 참조 어휘가 작을수록 우연히 겹칠 확률이 낮으므로 증거 문턱도 낮춘다 (고유 조각 250개 이상이면 최대)
+    const scale = Math.min(1, sal.size / 250);
     return { sal, lo: 0.6 + 0.9 * scale, width: 2 + scale };
   }
 
@@ -538,7 +568,7 @@
 
   /** 본문을 문장으로 나누고 조각 가중치(주제어처럼 여러 문장에 흔한 조각은 낮게)와 역색인을 만든다. */
   function bodyModel(body, bw) {
-    const subs = sentenceSpans(body).map((sp, idx) => ({ idx, start: sp.start, end: sp.end, text: body.slice(sp.start, sp.end) }));
+    const subs = splitSentences(body).map((sp, idx) => ({ idx, start: sp.start, end: sp.end, text: body.slice(sp.start, sp.end) }));
     const gramsOf = subs.map((s) => unique(tokenize(normalize(s.text), true)));
     const df = new Map();
     const post = new Map();
@@ -786,19 +816,27 @@
   }
 
   // ---------------------------------------------------------------- 요약
+  /** 비공백 글자 수(코드포인트). 자모가 분리된 입력이어도 같은 값이 되도록 NFC로 합쳐서 센다. */
   const nonSpaceLen = (s) => {
+    const t = s.normalize('NFC');
     let n = 0;
-    for (let i = 0; i < s.length; i++) {
-      const c = s.charCodeAt(i);
+    for (let i = 0; i < t.length; i++) {
+      const c = t.charCodeAt(i);
       if (!isSpace(c) && !(c >= 0xdc00 && c <= 0xdfff)) n++;
     }
     return n;
   };
 
+  /** 앞 n자(UTF-16 길이 기준 n 이하, 이모지를 반으로 자르지 않음). 잘리면 …로 끝난다. */
   function headOf(text, n) {
     const p = plain(text.slice(0, 4 * n)); // 긴 응답 전체를 다시 훑지 않도록 앞부분만 쓴다
-    const cps = Array.from(p);
-    return cps.length <= n ? p : cps.slice(0, n - 1).join('') + '…';
+    if (p.length <= n) return p;
+    let out = '';
+    for (const ch of p) {
+      if (out.length + ch.length > n - 1) break;
+      out += ch;
+    }
+    return out + '…';
   }
 
   function quantize(chars, total) {
@@ -964,7 +1002,7 @@
 
   const api = {
     DELETE_THRESHOLD, HIGH_THRESHOLD, REFUSAL_MESSAGE, BAND_MID, BAND_HIGH, VERBATIM_T, ADAPTED_T,
-    run, canDelete, deleteTurn, intentLabel, classifyIntent, splitSentences: sentenceSpans, normalize, tokenize,
+    run, canDelete, deleteTurn, intentLabel, classifyIntent, splitSentences, normalize, tokenize,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Analyze = api;

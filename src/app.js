@@ -132,7 +132,7 @@ async function buildReport(doc, integrity) {
   a.perEntry.forEach((fl, i) => fl.forEach((f) => flagRows.push(`<div class="rflag ${f.severity}">#${i + 1} · ${f.severity === 'high' ? '정책 확인 필요' : '보완 권장'} — ${esc(f.text)}</div>`)));
 
   return `
-  <img class="report-logo" src="assets/mju-logo.png" alt="명지대학교" width="190" height="44">
+  <img class="report-logo" src="assets/mju-logo.png" alt="명지대학교" width="210" height="54">
   <h1>생성형 AI 사용 내역서</h1>
   <p class="sub">${esc(meta.course) || '과목명 미입력'} · ${esc(meta.assignment) || '과제명 미입력'}</p>
   <table>

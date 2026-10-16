@@ -90,6 +90,10 @@
   //  - 'You said' / 'ChatGPT said': 위 한국어 문구의 영어 UI 대응으로 추정. 검색으로 확인하지 못했다.
   //  - 'Gemini said' / 'Gemini의 말': 추정. 검색으로 확인하지 못했다.
   //    (제3자 북마클릿이 'User'/'Gemini' 제목으로 내보낸다는 검색 요약만 있고, Gemini 자체 형식은 아니다.)
+  //  - '내가 한 말' / 'ChatGPT 답변': 확인됨 (2026-10-16). 사용자가 올린 실제 ChatGPT(chatgpt.com/c/...) 대화를 Chrome 154에서
+  //    Ctrl+P로 저장한 14쪽 PDF에서 관찰했다. 표지는 따로 한 줄에 "내가 한 말:" / "ChatGPT 답변:" 으로 있고 본문은 다음 줄부터
+  //    시작한다. 위 '나의 말' / 'ChatGPT의 말' 추정과는 달랐다(그 표기가 다른 화면 버전의 것인지는 모른다).
+  //    영어 화면의 표지는 확인하지 못했다.
   //  - 'User prompt' / 'Response': 확인됨 (2026-10-16). 사용자가 올린 실제 Gemini(gemini.google.com/app) 대화를
   //    Chrome 154에서 Ctrl+P로 저장한 PDF에서 관찰했다. 한국어 화면(hl=ko)인데도 표지는 영어로 나왔고, 표지 뒤 같은 줄에
   //    본문이 이어진다(예: "User prompt: 질문", "Response: 답변"). 대화가 여러 턴일 때의 모양은 한 턴짜리 파일만 봐서 모른다.
@@ -99,9 +103,9 @@
     { role: 'user', bare: true, labels: ['나의 말', '사용자의 말', 'You said'] },
     { role: 'assistant', bare: true, labels: ['ChatGPT의 말', 'ChatGPT said', 'Gemini의 말', 'Gemini said'] },
     { role: 'user', bare: true, labels: ['사용자', 'User', 'Human'] },
-    { role: 'user', labels: ['You', 'User prompt'] },
+    { role: 'user', labels: ['You', 'User prompt', '내가 한 말'] },
     { role: 'assistant', bare: true, labels: ['어시스턴트', 'Assistant'] },
-    { role: 'assistant', labels: ['Response'] },
+    { role: 'assistant', labels: ['Response', 'ChatGPT 답변'] },
     // 이름만 있는 줄('ChatGPT', 'Claude')은 공유 페이지 머리글일 수 있어 콜론이 있을 때만 표지로 본다.
     { role: 'assistant', labels: ['AI', 'ChatGPT', 'GPT', 'Claude', 'Gemini'] },
     { role: 'user', weak: true, labels: ['Q'] },
@@ -165,6 +169,27 @@
     return both ? strong : found;
   }
 
+  /**
+   * 연달아 나온 두 사용자 메시지가 '고쳐서 다시 보낸 질문'인가.
+   * 실제 ChatGPT 인쇄본에서 수정 전 질문과 수정 후 질문이 둘 다 나왔고(사이에 AI 응답 없음), 수정본은 원본 내용을 대부분 포함했다.
+   * 줄바꿈 위치가 수정 때문에 달라지므로 공백을 모두 지우고 글자 2-gram 포함도로 비교한다.
+   * 한계: 한 가지 사례로 정한 기준(0.6)이다. 서로 다른 질문이 연달아 나온 경우는 합쳐서 보존한다.
+   */
+  function isRevision(a, b) {
+    const grams = (t) => {
+      const c = t.replace(/\s+/g, '');
+      const set = new Set();
+      for (let i = 0; i + 1 < c.length; i++) set.add(c.slice(i, i + 2));
+      return set;
+    };
+    const ga = grams(a), gb = grams(b);
+    const [small, large] = ga.size <= gb.size ? [ga, gb] : [gb, ga];
+    if (small.size < 20) return false; // 너무 짧으면 우연히 겹친다
+    let hit = 0;
+    for (const g of small) if (large.has(g)) hit++;
+    return hit / small.size >= 0.6;
+  }
+
   function parseTranscript(text) {
     try {
       if (typeof text !== 'string') {
@@ -199,6 +224,7 @@
 
       const segments = [];
       let skipped = 0;
+      let revised = 0;
       for (let k = 0; k < markers.length; k++) {
         const mk = markers[k];
         const end = k + 1 < markers.length ? markers[k + 1].line : lines.length;
@@ -207,10 +233,13 @@
         const body = parts.join('\n').trim();
         if (!body) { skipped++; continue; }
         const last = segments[segments.length - 1];
-        if (last && last.role === mk.role) last.text += '\n\n' + body; // 같은 역할이 이어지면 합친다
-        else segments.push({ role: mk.role, text: body });
+        if (last && last.role === mk.role) {
+          if (mk.role === 'user' && isRevision(last.text, body)) { last.text = body; revised++; }
+          else last.text += '\n\n' + body; // 같은 역할이 이어지면 합친다
+        } else segments.push({ role: mk.role, text: body });
       }
       if (skipped) notes.push(`본문이 빈 표지 ${skipped}개는 건너뛰었습니다.`);
+      if (revised) notes.push(`질문을 고쳐서 다시 보낸 것으로 보이는 연속된 질문 ${revised}건은 마지막 것만 남겼습니다.`);
 
       if (!segments.length) {
         return { turns: [], ok: false, notes: ['역할 표지는 찾았지만 표지 뒤에 내용이 없습니다.'] };

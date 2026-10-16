@@ -433,3 +433,47 @@ test('Gemini 형식: 여러 턴이 이어지는 경우 턴별로 나뉜다 (여�
   const r = Parse.parseTranscript(text);
   assert.deepStrictEqual(r.turns.map((t) => [t.prompt, t.response]), [['첫 질문', '첫 답변'], ['두 번째 질문', '두 번째 답변']]);
 });
+
+// 실제 ChatGPT 대화를 Chrome 154에서 Ctrl+P로 저장한 14쪽 PDF(2026-10-16)에서 관찰한 구조를 따른다. 내용은 지어낸 것이다.
+// 표지는 따로 한 줄("내가 한 말:", "ChatGPT 답변:")이고 본문은 다음 줄부터이며, 사용자 메시지는 오른쪽으로 치우친 블록이라
+// 글자로 추출하면 앞에 공백이 길게 붙는다. 질문을 고쳐서 다시 보내면 수정 전·후 질문이 사이에 응답 없이 연달아 나왔다.
+const GPT_FIRST_Q = '동아리 홍보 포스터의 문구가 너무 딱딱해서 신입생이 관심을 갖지 않을 것 같아. 더 친근하게 바꾸고 싶어.';
+const GPT_REVISED_Q = GPT_FIRST_Q + ' 또한 모집 일정과 장소가 한눈에 보이도록 배치도 다시 제안해줘. 색상은 밝은 계열로 부탁해.';
+
+test('실제 ChatGPT 인쇄 PDF 구조: 내가 한 말 / ChatGPT 답변', () => {
+  const text = [
+    '내가 한 말:', '', '', '', '                       ' + GPT_FIRST_Q, '', '',
+    'ChatGPT 답변:', '', '좋아, 친근한 문구로 바꿔 볼게.', '', '“같이 시작해요!” 같은 권유형 문장이 좋아.', '', '',
+    '내가 한 말:', '', '                       두 번째 질문: 포스터 색상 조합도 추천해줘. 밝고 따뜻한 느낌이면 좋겠어.', '',
+    'ChatGPT 답변:', '', '노랑과 주황을 중심으로 쓰는 조합을 추천해.',
+  ].join('\n');
+  const r = Parse.parseTranscript(text);
+  assert.strictEqual(r.ok, true);
+  assert.strictEqual(r.turns.length, 2);
+  assert.strictEqual(r.turns[0].prompt, GPT_FIRST_Q);
+  assert.match(r.turns[0].response, /^좋아, 친근한 문구로 바꿔 볼게\./);
+  assert.match(r.turns[0].response, /같이 시작해요/);
+  assert.match(r.turns[1].prompt, /^두 번째 질문/);
+});
+
+test('ChatGPT 형식: 고쳐서 다시 보낸 질문은 마지막 것만 남기고 알린다', () => {
+  const text = [
+    '내가 한 말:', '', '     ' + GPT_FIRST_Q, '',
+    '내가 한 말:', '', '     ' + GPT_REVISED_Q, '',
+    'ChatGPT 답변:', '', '알겠어. 두 가지를 함께 제안할게.',
+  ].join('\n');
+  const r = Parse.parseTranscript(text);
+  assert.strictEqual(r.turns.length, 1);
+  assert.strictEqual(r.turns[0].prompt, GPT_REVISED_Q);
+  assert.ok(r.notes.some((n) => n.includes('다시 보낸')));
+});
+
+test('ChatGPT 형식: 서로 다른 질문이 연달아 나오면 버리지 않고 합쳐서 보존한다', () => {
+  const a = '파이썬에서 리스트와 튜플의 차이를 초보자가 이해하기 쉽게 비유를 들어서 설명해줘.';
+  const b = '내일 점심에 친구들과 갈 만한 학교 근처 식당을 가격대별로 정리해서 알려줄 수 있어?';
+  const text = ['내가 한 말:', a, '내가 한 말:', b, 'ChatGPT 답변:', '둘 다 답해 볼게.'].join('\n');
+  const r = Parse.parseTranscript(text);
+  assert.strictEqual(r.turns.length, 1);
+  assert.ok(r.turns[0].prompt.includes(a) && r.turns[0].prompt.includes(b));
+  assert.ok(!r.notes.some((n) => n.includes('다시 보낸')));
+});

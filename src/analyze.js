@@ -11,14 +11,14 @@
   const BAND_MID = 0.2;
   const BAND_HIGH = 0.5;
 
-  // 문장 정렬 임계값. 근거는 test/analyze.test.js의 보정 테스트가 출력하는 분포(원문 최대, 고쳐 쓴 문장 최소)다.
-  const VERBATIM_T = 0.80;
-  const ADAPTED_T = 0.45;
-  const ORIGIN_TIE = 0.05;   // 프롬프트와 응답 점수가 이 안쪽이면 동률로 보고 먼저 나온 프롬프트를 출처로 본다
+  // 문장 정렬 임계값은 test/fixtures 4벌(문장 57개)로 보정했다. 근거는 임계값 옆 한 줄.
+  const VERBATIM_T = 0.80;   // 고쳐 쓴 문장 최대 0.67, 어미·한두 단어만 고친 문장 최소 0.87 → 그 사이
+  const ADAPTED_T = 0.45;    // 고쳐 쓴 문장 최소 0.49 (직접 쓴 문장은 아래 MIN_MASS에서 이미 걸러진다)
+  const ORIGIN_TIE = 0.05;   // 학생 원문(프롬프트)과 AI 응답 점수 차가 이 안이면 동률로 보고 먼저 나온 프롬프트를 출처로 본다
   // 우연한 일치를 막는 최소 증거. 거의 통째로 들어 있는(그대로) 경우만 더 짧은 문장을 인정한다.
-  const MIN_STRONG = 5;      // 문장에 내용어 조각이 이 개수보다 적으면 부분 겹침은 판단하지 않는다
-  const MIN_SHARED = 4;      // 공유한 내용어 조각 수
-  const MIN_MASS = 4.3;       // 공유한 조각의 가중치 합 (상투구·주제어는 가중치가 낮다)
+  const MIN_STRONG = 5;      // 문장의 내용어 조각이 이보다 적으면 부분 겹침은 판단하지 않는다
+  const MIN_SHARED = 4;
+  const MIN_MASS = 4.3;      // 공유 가중치 합: 직접 쓴 문장 최대 3.86, 고쳐 쓴 문장 최소 4.68 → 그 사이
   const SHORT_STRONG = 3;
   const SHORT_SHARED = 3;
   const SHORT_MASS = 2;
@@ -56,10 +56,10 @@
   const KO_WEAK = new Set(words(`
     문제 경우 사용 이용 가능 필요 중요 방법 결과 과정 내용 관련 생각 다양 여러 하나 사람 사회 정도 부분 이상 현재 최근 기본 주요 대표 일반 전체
     정보 자료 분야 활동 목적 목표 효과 영향 변화 발전 증가 감소 제공 설명 소개 정리 분석 연구 조사 평가 수행 진행 구성 구조 기능 특징 장점 단점
-    차이 비교 사례 예시 이유 원인 대상 수준 상황 관계 역할 시간 의미 개념 이해 확인 선택 결정 판단 주장 근거 의견 입장 논리 관점 측면 요소 요인
+    차이 비교 사례 예시 원인 대상 수준 상황 관계 역할 시간 의미 개념 이해 확인 선택 결정 판단 주장 근거 의견 입장 논리 관점 측면 요소 요인
     한편 또한 결론 서론 본론 마지막 먼저 우선 다음 이후 이전 동안 가장 매우 훨씬 더욱 계속 항상 대부분 일부 모든 각각 서로 스스 함께 이미 아직 다시
     바로 직접 실제 구체 자신 과제 보고 작성 제시 포함 정확 자세 간단 추가 도움 가지 관한 주제 방향 부족 개선 중심 기준 단계 형태 유형 종류
-    이어 들어 걱정 수도 모두 어렵 정하 만들 만든 얻을 위기 이유 상태 모습 대로 하나 아무 어떻 여기 거기 저기 오늘 요즘 지금 아주 정말 조금 많이 너무
+    이어 들어 걱정 수도 모두 어렵 정하 만들 만든 상태 모습 대로 아무 어떻 여기 거기 저기 오늘 요즘 지금 아주 정말 조금 많이 너무
   `));
   const EN_STOP = new Set(words(`
     a an the and or but if then else so as at by for from in into of on onto to with without within about above after again against all am are be been being before below
@@ -447,7 +447,8 @@
         });
       });
     });
-    return { title: str(meta.assignment), brief: str(meta.assignmentBrief), body, convCount: convs.length, turns };
+    const unparsed = convs.filter((c) => c && c.parsed === 'unparsed').length;
+    return { title: str(meta.assignment), brief: str(meta.assignmentBrief), body, convCount: convs.length, unparsed, turns };
   }
 
   function makeUnits(text) {
@@ -613,7 +614,8 @@
       const rUnits = makeUnits(t.response);
       const topical = turnRelevance(pUnits, rUnits, sal, bw);
       const reuse = topical >= REUSE_CAP ? 0 : reuseOf(pUnits.concat(rUnits), model, bw);
-      return { ...t, pUnits, rUnits, relevance: r4(Math.max(topical, reuseRelevance(reuse))) };
+      const floor = reuse > 0 ? reuseRelevance(reuse) + 0.15 * topical : 0; // 옮겨 쓴 턴끼리 0.6에서 동점이 나지 않게 주제어 점수를 조금 더한다
+      return { ...t, pUnits, rUnits, relevance: r4(Math.max(topical, floor)) };
     });
   }
 
@@ -839,6 +841,9 @@
       const odd = dels.filter((x) => x && Number(x.relevance) >= DELETE_THRESHOLD).length;
       lines.push(`제출 전에 삭제된 대화는 ${dels.length}개이며, 삭제된 내용은 저장되지 않고 연관도와 글자 수만 기록되어 있습니다.`
         + (odd ? ` 이 중 ${odd}개는 기록된 연관도가 삭제 기준(${pct(DELETE_THRESHOLD)}%) 이상이라 앱의 삭제 규칙과 맞지 않습니다.` : ''));
+    }
+    if (d.unparsed) {
+      lines.push(`역할 표지를 찾지 못한 대화가 ${d.unparsed}개 있습니다. 이 대화는 전체가 AI 답변으로 계산되므로, 학생이 쓴 부분이 섞여 있으면 의존도가 실제보다 높게 나올 수 있습니다.`);
     }
     if (!sentences.length) {
       lines.push('제출된 본문이 비어 있어 의존도를 계산하지 않았습니다.');

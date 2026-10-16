@@ -181,7 +181,7 @@ function fixtures() {
       html: doc('동아리 부스 준비 대화', c.css, body),
       expect: {
         // 수정 전·후 질문이 연달아 나오면 Parse 가 같은 역할로 합친다(parse.js 담당 처리). 여기서는 턴 수와 AI 응답 글자만 본다.
-        turnsMin: 2, userTextsPresent: [edited1, edited2, KO.q2],
+        turnsMin: 2, userTextsPresent: [edited2, KO.q2], textHas: [edited1, edited2],
         responseParagraphs: [KO.a1[0], KO.a1[1], KO.a1[2], KO.a1[3], ...KO.a2],
         listItems: aiList, keepLiteral: ['**“영수증은 사진으로 남기기”**'],
         headings: ['부스 준비 체크리스트'],

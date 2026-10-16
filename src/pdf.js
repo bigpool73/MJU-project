@@ -50,7 +50,7 @@
   // Chrome 머리글의 날짜. 시각까지 있는 형식만 단독으로 인정한다(본문 첫 줄의 날짜와 구별하려고).
   const DATE_TIME_RES = [
     /^\d{2,4}\.\s?\d{1,2}\.\s?\d{1,2}\.?\s*(?:오전|오후)\s*\d{1,2}:\d{2}(?::\d{2})?$/,
-    /^\d{1,2}\/\d{1,2}\/\d{2,4},?\s*\d{1,2}:\d{2}(?::\d{2})?\s*(?:AM|PM)?$/i,
+    /^\d{1,2}\/\d{1,2}\/\d{2,4},?\s*\d{1,2}[:\s-]{0,2}\d{2}(?::\d{2})?\s*(?:AM|PM)?$/i, // 일부 환경은 콜론이 사설 영역 문자로 추출된다
     /^\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}(?::\d{2})?$/,
     /^[A-Z][a-z]{2,8}\.? \d{1,2}, \d{4},?\s*\d{1,2}:\d{2}(?::\d{2})?\s*(?:AM|PM)?$/,
   ];
@@ -176,8 +176,8 @@
 
   /* ── 머리글·바닥글 ── */
 
-  // 쪽 번호·총 쪽수와 같은 숫자만 가린다. 숫자를 전부 가리면 숫자만 다른 본문 줄이 머리글로 오인된다.
-  const maskPageNo = (s, pi, nPages) => s.replace(/\d+/g, (d) => (d === String(pi + 1) || d === String(nPages) ? '#' : d));
+  // 쪽 번호·총 쪽수와 같은 숫자만, 짧은 칸(40자 이하)에서만 가린다. 숫자를 전부 가리면 숫자만 다른 본문 줄이 머리글로 오인된다.
+  const maskPageNo = (s, pi, nPages) => s.length > 40 ? s : s.replace(/\d+/g, (d) => (d === String(pi + 1) || d === String(nPages) ? '#' : d));
 
   function removeHeadersFooters(pages, allLines, bodyH, removed) {
     const heightOf = (p) => p.height || 0;
@@ -445,7 +445,8 @@
       l.listPart = l.listStart || (rel === 'sp' && a.listPart) || (rel === 'nl' && a.listPart);
       if (rel === 'sp') {
         const m = /([A-Za-z]{2,})-$/.exec(out);
-        if (m && /^[a-z]/.test(text)) {
+        if (/[A-Za-z\uac00-\ud7af]-$/.test(out) && /^[\uac00-\ud7af]/.test(text)) out += text; // 하이픈 뒤에서 끊긴 한글 합성어: 하이픈이 끊김 자리였으므로 공백 없이
+        else if (m && /^[a-z]/.test(text)) {
           const nxt = /^[a-z]+/.exec(text)[0];
           out = words.has((m[1] + nxt).toLowerCase()) ? out.slice(0, -1) + text : out + text;
         } else out += ' ' + text;
@@ -714,7 +715,7 @@
     }
   }
 
-  const api = { extract, buildText, toConversation, guessProvider, configure, LIMITS, _build: build, _debug: (p) => { const r = build(p); return { flat: r.flat, ctx: { bodyH: r.ctx.bodyH, L: r.ctx.L } }; } };
+  const api = { extract, buildText, toConversation, guessProvider, configure, LIMITS, _build: build };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Pdf = api;
 })(typeof self !== 'undefined' ? self : globalThis);

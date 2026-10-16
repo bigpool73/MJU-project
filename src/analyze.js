@@ -870,7 +870,8 @@
     if (!d.turns.length) {
       lines.push('첨부된 AI 대화가 없어 본문과 비교할 내용이 없습니다.');
     } else {
-      lines.push(`첨부된 AI 대화는 ${d.convCount}개, 대화 턴은 ${sum.turnCount}개이며, 과제와 관련된 턴(연관도 ${pct(DELETE_THRESHOLD)}% 이상)은 ${sum.relatedTurnCount}개입니다.`
+      const relatedConvs = new Set(turnRes.filter((t) => t.relevance >= DELETE_THRESHOLD).map((t) => t.convIndex)).size;
+      lines.push(`첨부된 AI 대화는 ${d.convCount}개, 대화 턴은 ${sum.turnCount}개이며, 과제와 관련된 턴(연관도 ${pct(DELETE_THRESHOLD)}% 이상)은 ${sum.relatedTurnCount}개(관련 대화 ${relatedConvs}개)입니다.`
         + (sum.deletableTurnCount ? ` 연관도가 낮아 삭제할 수 있는 턴은 ${sum.deletableTurnCount}개입니다.` : ''));
       const top = turnRes[0];
       lines.push(`가장 연관도가 높은 대화는 대화 ${top.convIndex + 1}의 ${top.index + 1}번째 턴(연관도 ${pct(top.relevance)}%, 요청: ${intentLabel(top.intent)})입니다.`

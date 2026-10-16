@@ -30,8 +30,8 @@ h3 { font-size: 1rem; margin: 16px 0 6px; }
 
 /* ---- 로고 (투명 PNG. 어두운 배경에서는 남색이 묻히므로 흰 알약 위에 둔다) ---- */
 .brand { display: inline-block; margin-bottom: 10px; line-height: 0; }
-.brand-logo { display: block; height: 41px; width: auto; max-width: 100%; }
-.report-logo { display: block; height: 44px; width: auto; margin: 0 auto 10px; }
+.brand-logo { display: block; height: 48px; width: auto; max-width: 100%; }
+.report-logo { display: block; height: 54px; width: auto; margin: 0 auto 10px; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .brand { padding: 4px 10px; background: #fff; border-radius: 999px; }
 }

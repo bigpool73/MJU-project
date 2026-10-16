@@ -11,14 +11,14 @@
   const BAND_MID = 0.2;
   const BAND_HIGH = 0.5;
 
-  // 문장 정렬 임계값은 test/fixtures 4벌(문장 57개)로 보정했다. 근거는 임계값 옆 한 줄.
+  // 문장 정렬 임계값은 test/fixtures 6벌(본문 문장 75개)로 보정했다. 근거는 임계값 옆 한 줄.
   const VERBATIM_T = 0.80;   // 고쳐 쓴 문장 최대 0.67, 어미·한두 단어만 고친 문장 최소 0.87 → 그 사이
-  const ADAPTED_T = 0.45;    // 고쳐 쓴 문장 최소 0.49 (직접 쓴 문장은 아래 MIN_MASS에서 이미 걸러진다)
+  const ADAPTED_T = 0.45;    // 고쳐 쓴 문장 최소 0.49, 공유 가중치 합 4.3 이상인 직접 쓴 문장은 최대 0.29 → 그 사이
   const ORIGIN_TIE = 0.05;   // 학생 원문(프롬프트)과 AI 응답 점수 차가 이 안이면 동률로 보고 먼저 나온 프롬프트를 출처로 본다
   // 우연한 일치를 막는 최소 증거. 거의 통째로 들어 있는(그대로) 경우만 더 짧은 문장을 인정한다.
   const MIN_STRONG = 5;      // 문장의 내용어 조각이 이보다 적으면 부분 겹침은 판단하지 않는다
   const MIN_SHARED = 4;
-  const MIN_MASS = 4.3;      // 공유 가중치 합: 직접 쓴 문장 최대 3.86, 고쳐 쓴 문장 최소 4.68 → 그 사이
+  const MIN_MASS = 4.3;      // 공유 가중치 합: 점수 0.45 이상이 나온 직접 쓴 문장은 3.37, 고쳐 쓴 문장은 최소 4.68 → 그 사이
   const SHORT_STRONG = 3;
   const SHORT_SHARED = 3;
   const SHORT_MASS = 2;
@@ -120,10 +120,16 @@
     return g[1] === '니' && jongseong(g[0]) === 17;
   }
 
+  const MD_HINT = /[`*#>|~[\]\-+•·▪◦\r\n]|\d[.)]|https?:/;
+  const COMBINING = /[\u0300-\u036f\u1100-\u11ff\u3130-\u318f\u302e\u302f]/;
+
   /** 마크다운 표지만 지운다. 본문 글자는 그대로 둔다. */
   function stripMarkdown(s) {
-    return String(s)
-      .normalize('NFC') // 맥에서 복사한 자모 분리형을 합쳐야 같은 글자로 비교된다
+    s = String(s);
+    // 맥에서 복사한 자모 분리형을 합쳐야 같은 글자로 비교된다 (결합 문자가 없으면 건너뛴다)
+    if (COMBINING.test(s)) s = s.normalize('NFC');
+    if (!MD_HINT.test(s)) return s;
+    return s
       .replace(/\r\n?/g, '\n')
       .replace(/^[ \t]*(?:```|~~~)[^\n]*$/gm, '') // 코드펜스 표지와 언어 태그만 지우고 코드는 남긴다: 프로그래밍 과제에서는 코드도 근거다
       .replace(/!?\[([^\]\n]*)\]\([^)\n]*\)/g, '$1')
@@ -145,13 +151,16 @@
   ].sort((a, b) => b.length - a.length);
   const BOILERPLATE_RE = new RegExp(`(?<![\\p{L}\\p{N}])(?:${BOILERPLATE.map((x) => x.replace(/ /g, '\\s+')).join('|')})(?![\\p{L}\\p{N}])`, 'gu');
 
+  // 상투구 정규식은 비싸므로, 상투구에 들어 있는 낱말이 하나라도 있을 때만 돌린다
+  const BOILERPLATE_HINT = /결론|결과적|종합|이와 같|예를 들|마지막으로|끝으로|[첫둘셋넷]째|[첫두세] 번째|요약하면|정리하면|요컨대|다시 말|한 ?마디|라고 (?:생각|할 수)|살펴본 바|앞서 말한|conclu|sum|result|example|instance|other hand|addition|in other|first of all|can be said|mentioned above|we can see|all in all|overall/;
+
+  const CAMEL_HINT = /[a-z][A-Z]|[A-Z][A-Z][a-z]/;
+
   function normalize(text) {
-    return stripMarkdown(text)
-      .replace(/(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/g, ' ') // camelCase·HTTPServer를 단어로 나눈다 (룩어라운드라 긴 대문자 열에서도 선형)
-      .toLowerCase()
-      .replace(/\s+/g, ' ')
-      .replace(BOILERPLATE_RE, ' ')
-      .trim();
+    let t = stripMarkdown(text);
+    if (CAMEL_HINT.test(t)) t = t.replace(/(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/g, ' '); // camelCase·HTTPServer를 단어로 나눈다 (룩어라운드라 긴 대문자 열에서도 선형)
+    t = t.toLowerCase().replace(/\s+/g, ' ').trim();
+    return BOILERPLATE_HINT.test(t) ? t.replace(BOILERPLATE_RE, ' ') : t;
   }
 
   function plain(text) {
@@ -253,11 +262,10 @@
         i = j;
         continue;
       }
-      if (c === ' ' || c === '\t') {
+      if ((c === ' ' || c === '\t') && i - s >= 3) {
         // 마침표 없이 한국어 종결어미 뒤에 공백이 오는 경우. '다 알고' 같은 한 글자 '다'는 제외한다.
-        if (i - s >= 3 && koPlainEnd(text.slice(i - 2, i))) {
-          if (!KO_CONT.test(nextWord(text, i))) { push(s, i); s = i + 1; }
-        } else if (i - s >= 3 && KO_POLITE.test(text.slice(Math.max(s, i - 3), i))) {
+        const last = text.charCodeAt(i - 1);
+        if (last === 0xb2e4 /* 다 */ ? koPlainEnd(text.slice(i - 2, i)) : (last === 0xc694 /* 요 */ || last === 0xc8e0 /* 죠 */) && KO_POLITE.test(text.slice(Math.max(s, i - 3), i))) {
           if (!KO_CONT.test(nextWord(text, i))) { push(s, i); s = i + 1; }
         }
       }

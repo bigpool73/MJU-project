@@ -229,8 +229,7 @@ test('canDelete: 연관도가 0.15 미만이면 허용, 그 외에는 정확한 
   assert.notStrictEqual(unknown.message, A.REFUSAL_MESSAGE);
 });
 
-test('경계값: 연관도가 정확히 0.15이면 삭제할 수 없고 0.15 미만이면 삭제할 수 있다', () => {
-  // 연관도는 4자리로 반올림된 값으로 판정하므로, 판정과 화면에 보이는 값이 어긋나지 않는다
+test('삭제 판정은 소수 4자리로 반올림된 연관도로 하므로 화면에 보이는 값과 어긋나지 않는다', () => {
   for (const f of FIXTURES) {
     for (const t of RUNS.get(f.id).turns) assert.strictEqual(t.deletable, Number(t.relevance.toFixed(4)) < 0.15);
   }
@@ -660,11 +659,11 @@ test('summaryLine과 narrative: 형식, 필수 내용, 정직성 규칙(단정 �
     assert.ok(/추정/.test(text) && /링크로 검증/.test(text) && /하한/.test(text), '한계 문구가 빠짐');
     assert.ok(r.narrative[r.narrative.length - 1].includes('추정'), '한계는 마지막 줄');
   }
-  const spec = '요청: 개요 구성 · 연관도 87% · 과제 반영: 문장 4개(그대로 1, 수정 3)';
-  const sample = clone(RUNS.get('carbon-tax').turns[0]);
-  sample.intent = 'outline'; sample.relevance = 0.87; sample.deletable = false; sample.reflected = { verbatim: 1, adapted: 3, studentOrigin: 0 };
-  // 명세의 예시 문구를 그대로 재현하는지는 실제 엔진 출력의 접두 형식으로 확인한다
-  assert.ok(RUNS.get('carbon-tax').turns.some((t) => /^요청: [^·]+ · 연관도 \d+% · 과제 반영: 문장 \d+개\(그대로 \d+, 수정 \d+\)/.test(t.summaryLine)), spec);
+  // 명세의 예시 "요청: 개요 구성 · 연관도 87% · 과제 반영: 문장 4개(그대로 1, 수정 3)"와 같은 모양이 실제로 나온다
+  const withReflection = FIXTURES.flatMap((f) => RUNS.get(f.id).turns).find((t) => t.reflected.verbatim + t.reflected.adapted >= 2);
+  assert.ok(withReflection, '문장을 둘 이상 반영한 턴이 없음');
+  const n = withReflection.reflected.verbatim + withReflection.reflected.adapted;
+  assert.ok(withReflection.summaryLine.includes(`과제 반영: 문장 ${n}개(그대로 ${withReflection.reflected.verbatim}, 수정 ${withReflection.reflected.adapted})`));
 });
 
 test('모든 문장을 그대로 옮긴 최악의 경우에도 단정 표현 없이 근거 중심으로 쓴다', () => {

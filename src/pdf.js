@@ -176,7 +176,8 @@
 
   /* ── 머리글·바닥글 ── */
 
-  const maskDigits = (s) => s.replace(/\d+/g, '#');
+  // 쪽 번호·총 쪽수와 같은 숫자만 가린다. 숫자를 전부 가리면 숫자만 다른 본문 줄이 머리글로 오인된다.
+  const maskPageNo = (s, pi, nPages) => s.replace(/\d+/g, (d) => (d === String(pi + 1) || d === String(nPages) ? '#' : d));
 
   function removeHeadersFooters(pages, allLines, bodyH, removed) {
     const heightOf = (p) => p.height || 0;
@@ -200,7 +201,7 @@
     const nPages = pages.length;
     const need = nPages >= 2 ? Math.max(2, Math.ceil(nPages * 0.6)) : Infinity;
     const groups = new Map(); // key -> { pages:Set, y:[] }
-    const keyOf = (cd, cellText) => cd.side + '|' + maskDigits(cellText);
+    const keyOf = (cd, cellText) => cd.side + '|' + maskPageNo(cellText, cd.pi, nPages);
     for (const cd of cands) {
       for (const c of cd.l.cells) {
         const k = keyOf(cd, c.text);
@@ -436,8 +437,8 @@
     let blockHasList = false;
     flat.forEach((l, i) => {
       let text = l.text;
-      if (l.mono) text = ' '.repeat(Math.max(0, Math.round((l.minX - ctx.codeLeftFor(i)) / (l.charW || l.h * 0.6)))) + text;
-      if (i === 0) { out = text; return; }
+      if (l.mono) text = ' '.repeat(Math.max(0, Math.round((l.x0 - ctx.codeLeftFor(i)) / (l.charW || l.h * 0.6)))) + text;
+      if (i === 0) { l.listPart = l.listStart; out = text; return; }
       const a = flat[i - 1];
       const rel = relation(a, l, ctx, a.page === l.page);
       a.rel = rel;
@@ -462,15 +463,26 @@
       .trim();
   }
 
+  /** 머리글·바닥글 판별 전의 본문 글자 크기. 쪽 위·아래 2줄(후보)을 빼고 글자 수 가중 중앙값을 쓰고, 남은 줄이 너무 적으면 가장 큰 글자 크기로 대신한다. */
+  function estimateBodyH(allLines) {
+    const inner = [];
+    allLines.forEach((lines) => lines.forEach((l, i) => { if (!l.mono && i >= 2 && i < lines.length - 2) inner.push(l); }));
+    if (inner.length >= 3) {
+      const hs = [];
+      for (const l of inner) for (let k = 0; k < Math.min(l.text.length, 200); k++) hs.push(l.h);
+      return median(hs) || 10;
+    }
+    // 아주 작은 문서: 머리글·바닥글은 본문보다 작은 글씨이므로 가장 큰 글자 크기를 본문으로 본다
+    return flatten(allLines).filter((l) => !l.mono).reduce((m, l) => Math.max(m, l.h), 0) || 10;
+  }
+
   function build(pages) {
     const removed = [];
     if (!Array.isArray(pages) || !pages.length) return { text: '', removed, pageTexts: 0 };
     const norm = pages.map(normPage);
     let allLines = norm.map((p, i) => toLines(p, i));
     // 머리글 판별에 쓰는 임시 본문 크기(최종 값은 머리글을 걷어 낸 뒤 annotate 에서 다시 정한다)
-    const tmpFlat = flatten(allLines);
-    let bodyH0 = median(tmpFlat.flatMap((l) => (l.mono ? [] : new Array(Math.min(l.text.length, 200)).fill(l.h))));
-    if (!bodyH0) bodyH0 = 10;
+    const bodyH0 = estimateBodyH(allLines);
     allLines = removeHeadersFooters(norm, allLines, bodyH0, removed);
     const flat = flatten(allLines);
     if (!flat.length) return { text: '', removed, flat, ctx: { bodyH: 0, L: 0 } };

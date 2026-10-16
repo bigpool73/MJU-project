@@ -1,0 +1,755 @@
+{
+ "generatedBy": "test/pdf-fixtures/build.js",
+ "note": "내용은 모두 지어낸 글이며 실제 서비스 화면을 베낀 것이 아니다.",
+ "fixtures": [
+  {
+   "file": "a-ko-labels.pdf",
+   "name": "a-ko-labels",
+   "kind": "chat",
+   "hf": true,
+   "provider": "chatgpt",
+   "exactSpaces": true,
+   "expect": {
+    "turns": [
+     {
+      "prompt": "대학 동아리 축제 부스를 운영하려고 해. 준비 순서를 알려줘.",
+      "response": "축제 부스를 준비할 때는 먼저 목적과 예산을 정하고, 그다음에 역할을 나누는 순서로 진행하면 좋습니다. 처음부터 모든 것을 한꺼번에 정하려고 하면 일정이 밀리기 쉬우므로 단계별로 확인하는 것이 안전합니다. 부스의 주제는 방문객이 짧은 시간에 이해할 수 있어야 합니다. 설명이 길어지면 대기 줄이 늘어나고 참여율이 떨어지기 때문에, 한 문장으로 소개할 수 있는 체험 활동을 중심으로 구성하는 것이 좋습니다. 예산은 재료비, 대여료, 홍보물 제작비로 나누어 기록해 두세요. 행사 직전에 급하게 구입하면 가격이 오르는 경우가 많으니 최소 2주 전에는 구매 목록을 확정해야 합니다. 마지막으로 행사 당일의 동선을 미리 그려 보면 좋습니다. 입구, 체험 공간, 정산 공간을 분리하면 혼잡을 줄일 수 있고 안전 문제도 예방할 수 있습니다."
+     },
+     {
+      "prompt": "예산 기록은 어떤 형식으로 하면 좋을까?",
+      "response": "간단한 표로 항목, 예상 금액, 실제 금액, 담당자를 적어 두면 충분합니다. 영수증은 사진으로 남기고 파일 이름에 날짜를 넣으면 나중에 정산할 때 찾기 쉽습니다. 정산이 끝나면 예상 금액과 실제 금액의 차이를 계산해서 다음 행사의 기준으로 삼으세요. 차이가 큰 항목은 원인을 한 줄로 적어 두는 것이 도움이 됩니다."
+     },
+     {
+      "prompt": "홍보는 어떻게 하는 게 효과적이야?",
+      "response": "홍보는 행사 일주일 전부터 시작하되, 학교 게시판과 소셜 미디어를 함께 쓰는 것이 좋습니다. 포스터에는 날짜, 장소, 체험 내용을 한눈에 볼 수 있게 담아야 합니다."
+     }
+    ],
+    "parsed": "ok"
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 3:12",
+    "title": "시험용 문서 사본",
+    "url": "https://example.invalid/doc/abc123"
+   }
+  },
+  {
+   "file": "a-ko-labels-nohf.pdf",
+   "name": "a-ko-labels",
+   "kind": "chat",
+   "hf": false,
+   "provider": "chatgpt",
+   "exactSpaces": true,
+   "expect": {
+    "turns": [
+     {
+      "prompt": "대학 동아리 축제 부스를 운영하려고 해. 준비 순서를 알려줘.",
+      "response": "축제 부스를 준비할 때는 먼저 목적과 예산을 정하고, 그다음에 역할을 나누는 순서로 진행하면 좋습니다. 처음부터 모든 것을 한꺼번에 정하려고 하면 일정이 밀리기 쉬우므로 단계별로 확인하는 것이 안전합니다. 부스의 주제는 방문객이 짧은 시간에 이해할 수 있어야 합니다. 설명이 길어지면 대기 줄이 늘어나고 참여율이 떨어지기 때문에, 한 문장으로 소개할 수 있는 체험 활동을 중심으로 구성하는 것이 좋습니다. 예산은 재료비, 대여료, 홍보물 제작비로 나누어 기록해 두세요. 행사 직전에 급하게 구입하면 가격이 오르는 경우가 많으니 최소 2주 전에는 구매 목록을 확정해야 합니다. 마지막으로 행사 당일의 동선을 미리 그려 보면 좋습니다. 입구, 체험 공간, 정산 공간을 분리하면 혼잡을 줄일 수 있고 안전 문제도 예방할 수 있습니다."
+     },
+     {
+      "prompt": "예산 기록은 어떤 형식으로 하면 좋을까?",
+      "response": "간단한 표로 항목, 예상 금액, 실제 금액, 담당자를 적어 두면 충분합니다. 영수증은 사진으로 남기고 파일 이름에 날짜를 넣으면 나중에 정산할 때 찾기 쉽습니다. 정산이 끝나면 예상 금액과 실제 금액의 차이를 계산해서 다음 행사의 기준으로 삼으세요. 차이가 큰 항목은 원인을 한 줄로 적어 두는 것이 도움이 됩니다."
+     },
+     {
+      "prompt": "홍보는 어떻게 하는 게 효과적이야?",
+      "response": "홍보는 행사 일주일 전부터 시작하되, 학교 게시판과 소셜 미디어를 함께 쓰는 것이 좋습니다. 포스터에는 날짜, 장소, 체험 내용을 한눈에 볼 수 있게 담아야 합니다."
+     }
+    ],
+    "parsed": "ok"
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "a-en-labels.pdf",
+   "name": "a-en-labels",
+   "kind": "chat",
+   "hf": true,
+   "provider": "chatgpt",
+   "exactSpaces": true,
+   "expect": {
+    "turns": [
+     {
+      "prompt": "Can you explain how a binary search works and when I should use it?",
+      "response": "Binary search finds a target value in a sorted list by repeatedly halving the search range. Each comparison with the middle element lets you discard half of the remaining candidates, so the number of steps grows only logarithmically with the size of the list. You should use it when the data is already sorted and random access is cheap. For a small list, a simple linear scan is often just as fast, and it is much easier to get right, so the well-known advantage of binary search only matters at larger sizes. A common mistake is computing the midpoint carelessly, which can overflow in languages with fixed-size integers. Another is updating the bounds incorrectly, which produces an infinite loop on some inputs. A state-of-the-art library routine avoids both problems, so prefer it in production code."
+     },
+     {
+      "prompt": "What is the time complexity?",
+      "response": "The time complexity is O(log n) comparisons in the worst case and O(1) extra memory for the iterative version. The recursive version uses O(log n) stack space, which is rarely a concern in practice."
+     }
+    ],
+    "parsed": "ok"
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 3:12",
+    "title": "시험용 문서 사본",
+    "url": "https://example.invalid/doc/abc123"
+   }
+  },
+  {
+   "file": "a-en-labels-nohf.pdf",
+   "name": "a-en-labels",
+   "kind": "chat",
+   "hf": false,
+   "provider": "chatgpt",
+   "exactSpaces": true,
+   "expect": {
+    "turns": [
+     {
+      "prompt": "Can you explain how a binary search works and when I should use it?",
+      "response": "Binary search finds a target value in a sorted list by repeatedly halving the search range. Each comparison with the middle element lets you discard half of the remaining candidates, so the number of steps grows only logarithmically with the size of the list. You should use it when the data is already sorted and random access is cheap. For a small list, a simple linear scan is often just as fast, and it is much easier to get right, so the well-known advantage of binary search only matters at larger sizes. A common mistake is computing the midpoint carelessly, which can overflow in languages with fixed-size integers. Another is updating the bounds incorrectly, which produces an infinite loop on some inputs. A state-of-the-art library routine avoids both problems, so prefer it in production code."
+     },
+     {
+      "prompt": "What is the time complexity?",
+      "response": "The time complexity is O(log n) comparisons in the worst case and O(1) extra memory for the iterative version. The recursive version uses O(log n) stack space, which is rarely a concern in practice."
+     }
+    ],
+    "parsed": "ok"
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "chatgpt-real-style.pdf",
+   "name": "chatgpt-real-style",
+   "kind": "chat",
+   "hf": true,
+   "provider": "chatgpt",
+   "exactSpaces": false,
+   "expect": {
+    "turnsMin": 2,
+    "userTextsPresent": [
+     "대학 동아리 축제 부스를 운영하려고 해. 준비 순서와 주의할 점을 알려줘.",
+     "예산 기록은 어떤 형식으로 하면 좋을까?"
+    ],
+    "textHas": [
+     "동아리 축제 부스를 하려는데 준비 순서 좀 알려줘.",
+     "대학 동아리 축제 부스를 운영하려고 해. 준비 순서와 주의할 점을 알려줘."
+    ],
+    "responseParagraphs": [
+     "축제 부스를 준비할 때는 먼저 목적과 예산을 정하고, 그다음에 역할을 나누는 순서로 진행하면 좋습니다. 처음부터 모든 것을 한꺼번에 정하려고 하면 일정이 밀리기 쉬우므로 단계별로 확인하는 것이 안전합니다.",
+     "부스의 주제는 방문객이 짧은 시간에 이해할 수 있어야 합니다. 설명이 길어지면 대기 줄이 늘어나고 참여율이 떨어지기 때문에, 한 문장으로 소개할 수 있는 체험 활동을 중심으로 구성하는 것이 좋습니다.",
+     "예산은 재료비, 대여료, 홍보물 제작비로 나누어 기록해 두세요. 행사 직전에 급하게 구입하면 가격이 오르는 경우가 많으니 최소 2주 전에는 구매 목록을 확정해야 합니다.",
+     "마지막으로 행사 당일의 동선을 미리 그려 보면 좋습니다. 입구, 체험 공간, 정산 공간을 분리하면 혼잡을 줄일 수 있고 안전 문제도 예방할 수 있습니다.",
+     "간단한 표로 항목, 예상 금액, 실제 금액, 담당자를 적어 두면 충분합니다. 영수증은 사진으로 남기고 파일 이름에 날짜를 넣으면 나중에 정산할 때 찾기 쉽습니다.",
+     "정산이 끝나면 예상 금액과 실제 금액의 차이를 계산해서 다음 행사의 기준으로 삼으세요. 차이가 큰 항목은 원인을 한 줄로 적어 두는 것이 도움이 됩니다."
+    ],
+    "listItems": [
+     "부스 이름과 한 줄 소개를 정한다",
+     "체험 활동은 두 가지 이내로 줄인다",
+     "예산표를 만들고 담당자를 적는다",
+     "방문객이 줄을 서는 방향을 표시한다",
+     "행사가 끝난 뒤 정산과 회고를 진행한다."
+    ],
+    "keepLiteral": [
+     "**“영수증은 사진으로 남기기”**"
+    ],
+    "headings": [
+     "부스 준비 체크리스트"
+    ]
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 5:00",
+    "title": "동아리 부스 준비 대화(사본)",
+    "url": "https://chatgpt.example.invalid/c/6abda108-d0e4-83ee"
+   }
+  },
+  {
+   "file": "chatgpt-real-style-nohf.pdf",
+   "name": "chatgpt-real-style",
+   "kind": "chat",
+   "hf": false,
+   "provider": "chatgpt",
+   "exactSpaces": false,
+   "expect": {
+    "turnsMin": 2,
+    "userTextsPresent": [
+     "대학 동아리 축제 부스를 운영하려고 해. 준비 순서와 주의할 점을 알려줘.",
+     "예산 기록은 어떤 형식으로 하면 좋을까?"
+    ],
+    "textHas": [
+     "동아리 축제 부스를 하려는데 준비 순서 좀 알려줘.",
+     "대학 동아리 축제 부스를 운영하려고 해. 준비 순서와 주의할 점을 알려줘."
+    ],
+    "responseParagraphs": [
+     "축제 부스를 준비할 때는 먼저 목적과 예산을 정하고, 그다음에 역할을 나누는 순서로 진행하면 좋습니다. 처음부터 모든 것을 한꺼번에 정하려고 하면 일정이 밀리기 쉬우므로 단계별로 확인하는 것이 안전합니다.",
+     "부스의 주제는 방문객이 짧은 시간에 이해할 수 있어야 합니다. 설명이 길어지면 대기 줄이 늘어나고 참여율이 떨어지기 때문에, 한 문장으로 소개할 수 있는 체험 활동을 중심으로 구성하는 것이 좋습니다.",
+     "예산은 재료비, 대여료, 홍보물 제작비로 나누어 기록해 두세요. 행사 직전에 급하게 구입하면 가격이 오르는 경우가 많으니 최소 2주 전에는 구매 목록을 확정해야 합니다.",
+     "마지막으로 행사 당일의 동선을 미리 그려 보면 좋습니다. 입구, 체험 공간, 정산 공간을 분리하면 혼잡을 줄일 수 있고 안전 문제도 예방할 수 있습니다.",
+     "간단한 표로 항목, 예상 금액, 실제 금액, 담당자를 적어 두면 충분합니다. 영수증은 사진으로 남기고 파일 이름에 날짜를 넣으면 나중에 정산할 때 찾기 쉽습니다.",
+     "정산이 끝나면 예상 금액과 실제 금액의 차이를 계산해서 다음 행사의 기준으로 삼으세요. 차이가 큰 항목은 원인을 한 줄로 적어 두는 것이 도움이 됩니다."
+    ],
+    "listItems": [
+     "부스 이름과 한 줄 소개를 정한다",
+     "체험 활동은 두 가지 이내로 줄인다",
+     "예산표를 만들고 담당자를 적는다",
+     "방문객이 줄을 서는 방향을 표시한다",
+     "행사가 끝난 뒤 정산과 회고를 진행한다."
+    ],
+    "keepLiteral": [
+     "**“영수증은 사진으로 남기기”**"
+    ],
+    "headings": [
+     "부스 준비 체크리스트"
+    ]
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "gemini-real-style.pdf",
+   "name": "gemini-real-style",
+   "kind": "chat",
+   "hf": true,
+   "provider": "gemini",
+   "exactSpaces": false,
+   "expect": {
+    "turns": [
+     {
+      "prompt": "가상 수업 발표 시험에 대해 알려줘",
+      "response": null
+     }
+    ],
+    "parsed": "ok",
+    "responseParagraphs": [
+     "요청하신 파일에 명시된 발표 시험에 대한 주요 정보는 다음과 같습니다. 아래 내용은 안내문에 적힌 대로 정리한 것입니다.",
+     "시험 형식: 교수님과 진행하는 짧은 대화 형식의 발표 시험입니다.",
+     "시험 범위: 교재의 제1장부터 제3장까지입니다.",
+     "제한 시간: 총 5분이며 초과하면 감점됩니다.",
+     "교수님이 각 장에서 하나씩 질문을 던집니다.",
+     "학생은 두세 문장으로 대답해야 하며, 이어지는 후속 질문에도 관련 내용을 덧붙여 대답해야 합니다.",
+     "지각: 예약된 시간에 늦을 경우 점수가 감점됩니다.",
+     "준비물: 휴대폰의 전원이 꺼져 있거나 사용하지 않더라도 교실에 반입하는 즉시 감점되니 미리 맡겨 두어야 합니다.",
+     "결석: 시험에 결석하면 0점 처리되며 재시험은 불가합니다.",
+     "위 내용은 안내문의 일부이므로 정확한 기준은 공지를 다시 확인하시기 바랍니다."
+    ],
+    "headings": [
+     "시험 개요",
+     "시험 진행 방식",
+     "시험 규칙 및 감점 사항"
+    ]
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 4:57",
+    "title": "가상 수업 발표 시험 안내(사본)",
+    "url": "https://gemini.example.invalid/app/0fed98e30f5789d3?hl=ko"
+   }
+  },
+  {
+   "file": "gemini-real-style-nohf.pdf",
+   "name": "gemini-real-style",
+   "kind": "chat",
+   "hf": false,
+   "provider": "gemini",
+   "exactSpaces": false,
+   "expect": {
+    "turns": [
+     {
+      "prompt": "가상 수업 발표 시험에 대해 알려줘",
+      "response": null
+     }
+    ],
+    "parsed": "ok",
+    "responseParagraphs": [
+     "요청하신 파일에 명시된 발표 시험에 대한 주요 정보는 다음과 같습니다. 아래 내용은 안내문에 적힌 대로 정리한 것입니다.",
+     "시험 형식: 교수님과 진행하는 짧은 대화 형식의 발표 시험입니다.",
+     "시험 범위: 교재의 제1장부터 제3장까지입니다.",
+     "제한 시간: 총 5분이며 초과하면 감점됩니다.",
+     "교수님이 각 장에서 하나씩 질문을 던집니다.",
+     "학생은 두세 문장으로 대답해야 하며, 이어지는 후속 질문에도 관련 내용을 덧붙여 대답해야 합니다.",
+     "지각: 예약된 시간에 늦을 경우 점수가 감점됩니다.",
+     "준비물: 휴대폰의 전원이 꺼져 있거나 사용하지 않더라도 교실에 반입하는 즉시 감점되니 미리 맡겨 두어야 합니다.",
+     "결석: 시험에 결석하면 0점 처리되며 재시험은 불가합니다.",
+     "위 내용은 안내문의 일부이므로 정확한 기준은 공지를 다시 확인하시기 바랍니다."
+    ],
+    "headings": [
+     "시험 개요",
+     "시험 진행 방식",
+     "시험 규칙 및 감점 사항"
+    ]
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "b-bubbles.pdf",
+   "name": "b-bubbles",
+   "kind": "chat",
+   "hf": true,
+   "provider": "other",
+   "exactSpaces": true,
+   "expect": {
+    "parsed": "unparsed",
+    "allText": [
+     "대학 동아리 축제 부스를 운영하려고 해. 준비 순서를 알려줘.",
+     "축제 부스를 준비할 때는 먼저 목적과 예산을 정하고, 그다음에 역할을 나누는 순서로 진행하면 좋습니다. 처음부터 모든 것을 한꺼번에 정하려고 하면 일정이 밀리기 쉬우므로 단계별로 확인하는 것이 안전합니다.",
+     "부스의 주제는 방문객이 짧은 시간에 이해할 수 있어야 합니다. 설명이 길어지면 대기 줄이 늘어나고 참여율이 떨어지기 때문에, 한 문장으로 소개할 수 있는 체험 활동을 중심으로 구성하는 것이 좋습니다.",
+     "예산은 재료비, 대여료, 홍보물 제작비로 나누어 기록해 두세요. 행사 직전에 급하게 구입하면 가격이 오르는 경우가 많으니 최소 2주 전에는 구매 목록을 확정해야 합니다.",
+     "마지막으로 행사 당일의 동선을 미리 그려 보면 좋습니다. 입구, 체험 공간, 정산 공간을 분리하면 혼잡을 줄일 수 있고 안전 문제도 예방할 수 있습니다.",
+     "예산 기록은 어떤 형식으로 하면 좋을까?",
+     "간단한 표로 항목, 예상 금액, 실제 금액, 담당자를 적어 두면 충분합니다. 영수증은 사진으로 남기고 파일 이름에 날짜를 넣으면 나중에 정산할 때 찾기 쉽습니다.",
+     "정산이 끝나면 예상 금액과 실제 금액의 차이를 계산해서 다음 행사의 기준으로 삼으세요. 차이가 큰 항목은 원인을 한 줄로 적어 두는 것이 도움이 됩니다."
+    ]
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 3:12",
+    "title": "시험용 문서 사본",
+    "url": "https://example.invalid/doc/abc123"
+   }
+  },
+  {
+   "file": "b-bubbles-nohf.pdf",
+   "name": "b-bubbles",
+   "kind": "chat",
+   "hf": false,
+   "provider": "other",
+   "exactSpaces": true,
+   "expect": {
+    "parsed": "unparsed",
+    "allText": [
+     "대학 동아리 축제 부스를 운영하려고 해. 준비 순서를 알려줘.",
+     "축제 부스를 준비할 때는 먼저 목적과 예산을 정하고, 그다음에 역할을 나누는 순서로 진행하면 좋습니다. 처음부터 모든 것을 한꺼번에 정하려고 하면 일정이 밀리기 쉬우므로 단계별로 확인하는 것이 안전합니다.",
+     "부스의 주제는 방문객이 짧은 시간에 이해할 수 있어야 합니다. 설명이 길어지면 대기 줄이 늘어나고 참여율이 떨어지기 때문에, 한 문장으로 소개할 수 있는 체험 활동을 중심으로 구성하는 것이 좋습니다.",
+     "예산은 재료비, 대여료, 홍보물 제작비로 나누어 기록해 두세요. 행사 직전에 급하게 구입하면 가격이 오르는 경우가 많으니 최소 2주 전에는 구매 목록을 확정해야 합니다.",
+     "마지막으로 행사 당일의 동선을 미리 그려 보면 좋습니다. 입구, 체험 공간, 정산 공간을 분리하면 혼잡을 줄일 수 있고 안전 문제도 예방할 수 있습니다.",
+     "예산 기록은 어떤 형식으로 하면 좋을까?",
+     "간단한 표로 항목, 예상 금액, 실제 금액, 담당자를 적어 두면 충분합니다. 영수증은 사진으로 남기고 파일 이름에 날짜를 넣으면 나중에 정산할 때 찾기 쉽습니다.",
+     "정산이 끝나면 예상 금액과 실제 금액의 차이를 계산해서 다음 행사의 기준으로 삼으세요. 차이가 큰 항목은 원인을 한 줄로 적어 두는 것이 도움이 됩니다."
+    ]
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "c-code-table-list.pdf",
+   "name": "c-code-table-list",
+   "kind": "chat",
+   "hf": true,
+   "provider": "chatgpt",
+   "exactSpaces": true,
+   "expect": {
+    "parsed": "ok",
+    "codeLines": [
+     "def moving_average(values, window):",
+     "    \"\"\"이동 평균을 계산한다.\"\"\"",
+     "    result = []",
+     "    for i in range(len(values)):",
+     "        start = max(0, i - window + 1)",
+     "        chunk = values[start:i + 1]",
+     "        result.append(sum(chunk) / len(chunk))",
+     "    return result",
+     "data = [3, 5, 8, 13, 21, 34, 55]",
+     "print(moving_average(data, 3))",
+     "def moving_average1(values, window):",
+     "    \"\"\"이동 평균을 계산한다.\"\"\"",
+     "    result = []",
+     "    for i in range(len(values)):",
+     "        start = max(0, i - window + 1)",
+     "        chunk = values[start:i + 1]",
+     "        result.append(sum(chunk) / len(chunk))",
+     "    return result",
+     "data = [3, 5, 8, 13, 21, 34, 55]",
+     "print(moving_average1(data, 3))",
+     "def moving_average2(values, window):",
+     "    \"\"\"이동 평균을 계산한다.\"\"\"",
+     "    result = []",
+     "    for i in range(len(values)):",
+     "        start = max(0, i - window + 1)",
+     "        chunk = values[start:i + 1]",
+     "        result.append(sum(chunk) / len(chunk))",
+     "    return result",
+     "data = [3, 5, 8, 13, 21, 34, 55]",
+     "print(moving_average2(data, 3))",
+     "def moving_average3(values, window):",
+     "    \"\"\"이동 평균을 계산한다.\"\"\"",
+     "    result = []",
+     "    for i in range(len(values)):",
+     "        start = max(0, i - window + 1)",
+     "        chunk = values[start:i + 1]",
+     "        result.append(sum(chunk) / len(chunk))",
+     "    return result",
+     "data = [3, 5, 8, 13, 21, 34, 55]",
+     "print(moving_average3(data, 3))"
+    ],
+    "tableRows": [
+     "항목 | 예상 금액 | 담당자",
+     "재료비 | 120,000원 | 김하나",
+     "대여료 | 80,000원 | 이둘",
+     "홍보물 제작 | 45,000원 | 박셋",
+     "간식 | 30,000원 | 최넷",
+     "예비비 | 25,000원 | 정다섯"
+    ],
+    "listItems": [
+     "데이터가 비어 있으면 빈 목록을 돌려준다",
+     "창 크기가 데이터보다 크면 가능한 구간만 계산한다",
+     "결과의 길이는 입력과 같다",
+     "부동소수점 오차는 반올림으로 처리한다"
+    ],
+    "responseParagraphs": [
+     "아래는 이동 평균을 계산하는 예제와 예산 정리표입니다. 먼저 코드를 보고, 이어서 표와 목록을 확인해 주세요.",
+     "정리하면, 이동 평균은 창 크기에 따라 변화가 부드러워지는 정도가 달라지므로 목적에 맞게 크기를 고르는 것이 중요합니다."
+    ]
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 3:12",
+    "title": "시험용 문서 사본",
+    "url": "https://example.invalid/doc/abc123"
+   }
+  },
+  {
+   "file": "c-code-table-list-nohf.pdf",
+   "name": "c-code-table-list",
+   "kind": "chat",
+   "hf": false,
+   "provider": "chatgpt",
+   "exactSpaces": true,
+   "expect": {
+    "parsed": "ok",
+    "codeLines": [
+     "def moving_average(values, window):",
+     "    \"\"\"이동 평균을 계산한다.\"\"\"",
+     "    result = []",
+     "    for i in range(len(values)):",
+     "        start = max(0, i - window + 1)",
+     "        chunk = values[start:i + 1]",
+     "        result.append(sum(chunk) / len(chunk))",
+     "    return result",
+     "data = [3, 5, 8, 13, 21, 34, 55]",
+     "print(moving_average(data, 3))",
+     "def moving_average1(values, window):",
+     "    \"\"\"이동 평균을 계산한다.\"\"\"",
+     "    result = []",
+     "    for i in range(len(values)):",
+     "        start = max(0, i - window + 1)",
+     "        chunk = values[start:i + 1]",
+     "        result.append(sum(chunk) / len(chunk))",
+     "    return result",
+     "data = [3, 5, 8, 13, 21, 34, 55]",
+     "print(moving_average1(data, 3))",
+     "def moving_average2(values, window):",
+     "    \"\"\"이동 평균을 계산한다.\"\"\"",
+     "    result = []",
+     "    for i in range(len(values)):",
+     "        start = max(0, i - window + 1)",
+     "        chunk = values[start:i + 1]",
+     "        result.append(sum(chunk) / len(chunk))",
+     "    return result",
+     "data = [3, 5, 8, 13, 21, 34, 55]",
+     "print(moving_average2(data, 3))",
+     "def moving_average3(values, window):",
+     "    \"\"\"이동 평균을 계산한다.\"\"\"",
+     "    result = []",
+     "    for i in range(len(values)):",
+     "        start = max(0, i - window + 1)",
+     "        chunk = values[start:i + 1]",
+     "        result.append(sum(chunk) / len(chunk))",
+     "    return result",
+     "data = [3, 5, 8, 13, 21, 34, 55]",
+     "print(moving_average3(data, 3))"
+    ],
+    "tableRows": [
+     "항목 | 예상 금액 | 담당자",
+     "재료비 | 120,000원 | 김하나",
+     "대여료 | 80,000원 | 이둘",
+     "홍보물 제작 | 45,000원 | 박셋",
+     "간식 | 30,000원 | 최넷",
+     "예비비 | 25,000원 | 정다섯"
+    ],
+    "listItems": [
+     "데이터가 비어 있으면 빈 목록을 돌려준다",
+     "창 크기가 데이터보다 크면 가능한 구간만 계산한다",
+     "결과의 길이는 입력과 같다",
+     "부동소수점 오차는 반올림으로 처리한다"
+    ],
+    "responseParagraphs": [
+     "아래는 이동 평균을 계산하는 예제와 예산 정리표입니다. 먼저 코드를 보고, 이어서 표와 목록을 확인해 주세요.",
+     "정리하면, 이동 평균은 창 크기에 따라 변화가 부드러워지는 정도가 달라지므로 목적에 맞게 크기를 고르는 것이 중요합니다."
+    ]
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "d-page-boundary.pdf",
+   "name": "d-page-boundary",
+   "kind": "doc",
+   "hf": true,
+   "provider": "other",
+   "exactSpaces": true,
+   "expect": {
+    "allParagraphs": [
+     "축제 부스를 준비할 때는 먼저 목적과 예산을 정하고, 그다음에 역할을 나누는 순서로 진행하면 좋습니다. 처음부터 모든 것을 한꺼번에 정하려고 하면 일정이 밀리기 쉬우므로 단계별로 확인하는 것이 안전합니다.",
+     "부스의 주제는 방문객이 짧은 시간에 이해할 수 있어야 합니다. 설명이 길어지면 대기 줄이 늘어나고 참여율이 떨어지기 때문에, 한 문장으로 소개할 수 있는 체험 활동을 중심으로 구성하는 것이 좋습니다.",
+     "예산은 재료비, 대여료, 홍보물 제작비로 나누어 기록해 두세요. 행사 직전에 급하게 구입하면 가격이 오르는 경우가 많으니 최소 2주 전에는 구매 목록을 확정해야 합니다.",
+     "마지막으로 행사 당일의 동선을 미리 그려 보면 좋습니다. 입구, 체험 공간, 정산 공간을 분리하면 혼잡을 줄일 수 있고 안전 문제도 예방할 수 있습니다.",
+     "간단한 표로 항목, 예상 금액, 실제 금액, 담당자를 적어 두면 충분합니다. 영수증은 사진으로 남기고 파일 이름에 날짜를 넣으면 나중에 정산할 때 찾기 쉽습니다.",
+     "정산이 끝나면 예상 금액과 실제 금액의 차이를 계산해서 다음 행사의 기준으로 삼으세요. 차이가 큰 항목은 원인을 한 줄로 적어 두는 것이 도움이 됩니다.",
+     "이 문단은 한 쪽의 맨 아래에서 끝나며 마침표로 마무리됩니다.",
+     "이 문단은 다음 쪽의 맨 위에서 새로 시작하는 별개의 문단입니다.",
+     "Binary search finds a target value in a sorted list by repeatedly halving the search range. Each comparison with the middle element lets you discard half of the remaining candidates, so the number of steps grows only logarithmically with the size of the list.",
+     "You should use it when the data is already sorted and random access is cheap. For a small list, a simple linear scan is often just as fast, and it is much easier to get right, so the well-known advantage of binary search only matters at larger sizes.",
+     "A common mistake is computing the midpoint carelessly, which can overflow in languages with fixed-size integers. Another is updating the bounds incorrectly, which produces an infinite loop on some inputs. A state-of-the-art library routine avoids both problems, so prefer it in production code.",
+     "제목 다음 쪽에 이어지는 본문이므로 제목과 합쳐지면 안 됩니다."
+    ],
+    "separate": [
+     [
+      "이 문단은 한 쪽의 맨 아래에서 끝나며 마침표로 마무리됩니다.",
+      "이 문단은 다음 쪽의 맨 위에서 새로 시작하는 별개의 문단입니다."
+     ],
+     [
+      "제목만 쪽 끝에 남는 경우",
+      "제목 다음 쪽에 이어지는 본문이므로 제목과 합쳐지면 안 됩니다."
+     ]
+    ],
+    "minPages": 5
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 3:12",
+    "title": "시험용 문서 사본",
+    "url": "https://example.invalid/doc/abc123"
+   }
+  },
+  {
+   "file": "d-page-boundary-nohf.pdf",
+   "name": "d-page-boundary",
+   "kind": "doc",
+   "hf": false,
+   "provider": "other",
+   "exactSpaces": true,
+   "expect": {
+    "allParagraphs": [
+     "축제 부스를 준비할 때는 먼저 목적과 예산을 정하고, 그다음에 역할을 나누는 순서로 진행하면 좋습니다. 처음부터 모든 것을 한꺼번에 정하려고 하면 일정이 밀리기 쉬우므로 단계별로 확인하는 것이 안전합니다.",
+     "부스의 주제는 방문객이 짧은 시간에 이해할 수 있어야 합니다. 설명이 길어지면 대기 줄이 늘어나고 참여율이 떨어지기 때문에, 한 문장으로 소개할 수 있는 체험 활동을 중심으로 구성하는 것이 좋습니다.",
+     "예산은 재료비, 대여료, 홍보물 제작비로 나누어 기록해 두세요. 행사 직전에 급하게 구입하면 가격이 오르는 경우가 많으니 최소 2주 전에는 구매 목록을 확정해야 합니다.",
+     "마지막으로 행사 당일의 동선을 미리 그려 보면 좋습니다. 입구, 체험 공간, 정산 공간을 분리하면 혼잡을 줄일 수 있고 안전 문제도 예방할 수 있습니다.",
+     "간단한 표로 항목, 예상 금액, 실제 금액, 담당자를 적어 두면 충분합니다. 영수증은 사진으로 남기고 파일 이름에 날짜를 넣으면 나중에 정산할 때 찾기 쉽습니다.",
+     "정산이 끝나면 예상 금액과 실제 금액의 차이를 계산해서 다음 행사의 기준으로 삼으세요. 차이가 큰 항목은 원인을 한 줄로 적어 두는 것이 도움이 됩니다.",
+     "이 문단은 한 쪽의 맨 아래에서 끝나며 마침표로 마무리됩니다.",
+     "이 문단은 다음 쪽의 맨 위에서 새로 시작하는 별개의 문단입니다.",
+     "Binary search finds a target value in a sorted list by repeatedly halving the search range. Each comparison with the middle element lets you discard half of the remaining candidates, so the number of steps grows only logarithmically with the size of the list.",
+     "You should use it when the data is already sorted and random access is cheap. For a small list, a simple linear scan is often just as fast, and it is much easier to get right, so the well-known advantage of binary search only matters at larger sizes.",
+     "A common mistake is computing the midpoint carelessly, which can overflow in languages with fixed-size integers. Another is updating the bounds incorrectly, which produces an infinite loop on some inputs. A state-of-the-art library routine avoids both problems, so prefer it in production code.",
+     "제목 다음 쪽에 이어지는 본문이므로 제목과 합쳐지면 안 됩니다."
+    ],
+    "separate": [
+     [
+      "이 문단은 한 쪽의 맨 아래에서 끝나며 마침표로 마무리됩니다.",
+      "이 문단은 다음 쪽의 맨 위에서 새로 시작하는 별개의 문단입니다."
+     ],
+     [
+      "제목만 쪽 끝에 남는 경우",
+      "제목 다음 쪽에 이어지는 본문이므로 제목과 합쳐지면 안 됩니다."
+     ]
+    ],
+    "minPages": 5
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "e-mixed.pdf",
+   "name": "e-mixed",
+   "kind": "doc",
+   "hf": true,
+   "provider": "other",
+   "exactSpaces": true,
+   "expect": {
+    "allParagraphs": [
+     "인공지능이 만든 글을 그대로 제출하는 것과 참고하여 자기 말로 다시 쓰는 것은 서로 다른 일이며, 그 차이를 스스로 설명할 수 있어야 한다는 점이 이번 수업에서 가장 중요하게 다뤄졌습니다.",
+     "API를 호출할 때는 JSON 형식으로 응답을 받고, 응답 코드가 200이 아니면 재시도 로직(retry logic)을 실행합니다.",
+     "프로젝트 일정은 ①요구 사항 정리 ②설계 ③구현 ④시험 순서로 진행하며, 각 단계가 끝날 때마다 팀원들과 검토 회의를 합니다.",
+     "발표 연습을 하다가 너무 긴장해서 ㅋㅋㅋ 웃음이 나왔지만 😀 끝까지 잘 마쳤고 👍 교수님께서도 칭찬해 주셨습니다.",
+     "이 문장은 한글과 English words가 섞여 있고, 숫자 2026과 기호 (괄호), \"따옴표\", 그리고 하이픈-연결어도 포함합니다."
+    ],
+    "emojiInfo": [
+     "😀",
+     "👍",
+     "ㅋㅋㅋ",
+     "①②③④"
+    ]
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 3:12",
+    "title": "시험용 문서 사본",
+    "url": "https://example.invalid/doc/abc123"
+   }
+  },
+  {
+   "file": "e-mixed-nohf.pdf",
+   "name": "e-mixed",
+   "kind": "doc",
+   "hf": false,
+   "provider": "other",
+   "exactSpaces": true,
+   "expect": {
+    "allParagraphs": [
+     "인공지능이 만든 글을 그대로 제출하는 것과 참고하여 자기 말로 다시 쓰는 것은 서로 다른 일이며, 그 차이를 스스로 설명할 수 있어야 한다는 점이 이번 수업에서 가장 중요하게 다뤄졌습니다.",
+     "API를 호출할 때는 JSON 형식으로 응답을 받고, 응답 코드가 200이 아니면 재시도 로직(retry logic)을 실행합니다.",
+     "프로젝트 일정은 ①요구 사항 정리 ②설계 ③구현 ④시험 순서로 진행하며, 각 단계가 끝날 때마다 팀원들과 검토 회의를 합니다.",
+     "발표 연습을 하다가 너무 긴장해서 ㅋㅋㅋ 웃음이 나왔지만 😀 끝까지 잘 마쳤고 👍 교수님께서도 칭찬해 주셨습니다.",
+     "이 문장은 한글과 English words가 섞여 있고, 숫자 2026과 기호 (괄호), \"따옴표\", 그리고 하이픈-연결어도 포함합니다."
+    ],
+    "emojiInfo": [
+     "😀",
+     "👍",
+     "ㅋㅋㅋ",
+     "①②③④"
+    ]
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "h-report.pdf",
+   "name": "h-report",
+   "kind": "doc",
+   "hf": true,
+   "provider": "other",
+   "exactSpaces": true,
+   "expect": {
+    "allParagraphs": [
+     "최근 지역 도서관의 이용률이 감소하는 추세에 대한 우려가 커지고 있다. 이 연구는 이용자 설문과 면담을 바탕으로 이용 활성화 방안을 제시하는 것을 목적으로 한다.",
+     "연구의 범위는 가상의 A시에 있는 공공도서관 세 곳으로 한정하였다. 따라서 결과를 다른 지역에 그대로 적용하는 데에는 한계가 있다.",
+     "설문은 2026년 3월부터 4월까지 두 달 동안 진행하였으며, 응답자는 모두 120명이다. 면담은 사서와 이용자를 각각 다섯 명씩 선정하여 진행하였다.",
+     "수집한 자료는 빈도 분석과 주제 분석으로 정리하였다. 면담 내용은 동의를 받은 뒤 기록하였고, 개인을 식별할 수 있는 정보는 제외하였다.",
+     "응답자의 과반수는 운영 시간이 생활 방식과 맞지 않는다고 답하였다. 특히 직장인과 학생은 저녁 시간의 운영 연장을 가장 많이 요구하였다.",
+     "한편 프로그램에 대한 인지도는 낮은 편이었다. 홍보 채널을 다양화하고 이용자가 직접 참여하는 프로그램을 늘리는 것이 필요하다고 판단된다.",
+     "이러한 결과는 선행 연구와 대체로 일치한다. 다만 표본의 크기가 작아 일반화하기에는 신중할 필요가 있다.",
+     "본 연구는 운영 시간의 조정과 홍보 방식의 개선이 이용 활성화에 중요하다는 점을 확인하였다. 후속 연구에서는 표본을 넓혀 결과를 검증할 필요가 있다."
+    ],
+    "headings": [
+     "지역 도서관 이용 활성화 방안에 관한 연구",
+     "1. 서론",
+     "2. 연구 방법",
+     "3. 결과 및 논의",
+     "4. 결론"
+    ],
+    "refs": [
+     "김가상, 이예시. (2024). 공공도서관 이용 행태 분석. 가상정보학회지, 12(3), 45-67.",
+     "박모의. (2025). 지역 문화시설의 접근성 연구. 가상문화연구, 8(1), 101-120."
+    ]
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 3:12",
+    "title": "시험용 문서 사본",
+    "url": "https://example.invalid/doc/abc123"
+   }
+  },
+  {
+   "file": "h-report-nohf.pdf",
+   "name": "h-report",
+   "kind": "doc",
+   "hf": false,
+   "provider": "other",
+   "exactSpaces": true,
+   "expect": {
+    "allParagraphs": [
+     "최근 지역 도서관의 이용률이 감소하는 추세에 대한 우려가 커지고 있다. 이 연구는 이용자 설문과 면담을 바탕으로 이용 활성화 방안을 제시하는 것을 목적으로 한다.",
+     "연구의 범위는 가상의 A시에 있는 공공도서관 세 곳으로 한정하였다. 따라서 결과를 다른 지역에 그대로 적용하는 데에는 한계가 있다.",
+     "설문은 2026년 3월부터 4월까지 두 달 동안 진행하였으며, 응답자는 모두 120명이다. 면담은 사서와 이용자를 각각 다섯 명씩 선정하여 진행하였다.",
+     "수집한 자료는 빈도 분석과 주제 분석으로 정리하였다. 면담 내용은 동의를 받은 뒤 기록하였고, 개인을 식별할 수 있는 정보는 제외하였다.",
+     "응답자의 과반수는 운영 시간이 생활 방식과 맞지 않는다고 답하였다. 특히 직장인과 학생은 저녁 시간의 운영 연장을 가장 많이 요구하였다.",
+     "한편 프로그램에 대한 인지도는 낮은 편이었다. 홍보 채널을 다양화하고 이용자가 직접 참여하는 프로그램을 늘리는 것이 필요하다고 판단된다.",
+     "이러한 결과는 선행 연구와 대체로 일치한다. 다만 표본의 크기가 작아 일반화하기에는 신중할 필요가 있다.",
+     "본 연구는 운영 시간의 조정과 홍보 방식의 개선이 이용 활성화에 중요하다는 점을 확인하였다. 후속 연구에서는 표본을 넓혀 결과를 검증할 필요가 있다."
+    ],
+    "headings": [
+     "지역 도서관 이용 활성화 방안에 관한 연구",
+     "1. 서론",
+     "2. 연구 방법",
+     "3. 결과 및 논의",
+     "4. 결론"
+    ],
+    "refs": [
+     "김가상, 이예시. (2024). 공공도서관 이용 행태 분석. 가상정보학회지, 12(3), 45-67.",
+     "박모의. (2025). 지역 문화시설의 접근성 연구. 가상문화연구, 8(1), 101-120."
+    ]
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "h-report-defaulthf.pdf",
+   "name": "h-report-defaulthf",
+   "kind": "doc",
+   "hf": "default",
+   "provider": "other",
+   "exactSpaces": true,
+   "expect": {
+    "allParagraphs": [
+     "최근 지역 도서관의 이용률이 감소하는 추세에 대한 우려가 커지고 있다. 이 연구는 이용자 설문과 면담을 바탕으로 이용 활성화 방안을 제시하는 것을 목적으로 한다.",
+     "연구의 범위는 가상의 A시에 있는 공공도서관 세 곳으로 한정하였다. 따라서 결과를 다른 지역에 그대로 적용하는 데에는 한계가 있다.",
+     "설문은 2026년 3월부터 4월까지 두 달 동안 진행하였으며, 응답자는 모두 120명이다. 면담은 사서와 이용자를 각각 다섯 명씩 선정하여 진행하였다.",
+     "수집한 자료는 빈도 분석과 주제 분석으로 정리하였다. 면담 내용은 동의를 받은 뒤 기록하였고, 개인을 식별할 수 있는 정보는 제외하였다.",
+     "응답자의 과반수는 운영 시간이 생활 방식과 맞지 않는다고 답하였다. 특히 직장인과 학생은 저녁 시간의 운영 연장을 가장 많이 요구하였다.",
+     "한편 프로그램에 대한 인지도는 낮은 편이었다. 홍보 채널을 다양화하고 이용자가 직접 참여하는 프로그램을 늘리는 것이 필요하다고 판단된다.",
+     "이러한 결과는 선행 연구와 대체로 일치한다. 다만 표본의 크기가 작아 일반화하기에는 신중할 필요가 있다.",
+     "본 연구는 운영 시간의 조정과 홍보 방식의 개선이 이용 활성화에 중요하다는 점을 확인하였다. 후속 연구에서는 표본을 넓혀 결과를 검증할 필요가 있다."
+    ],
+    "noHeaderFooterText": [
+     "기본 템플릿 보고서"
+    ]
+   },
+   "headerFooter": null
+  },
+  {
+   "file": "f-scan.pdf",
+   "name": "f-scan",
+   "kind": "scan",
+   "hf": false,
+   "expect": {
+    "ok": false
+   }
+  },
+  {
+   "file": "i-100pages.pdf",
+   "name": "i-100pages",
+   "kind": "perf",
+   "hf": true,
+   "expect": {
+    "pages": 100,
+    "markers": [
+     1,
+     50,
+     100
+    ]
+   },
+   "headerFooter": {
+    "date": "26. 10. 16. 오후 3:12",
+    "title": "백 쪽 시험 문서",
+    "url": "https://example.invalid/doc/hundred"
+   }
+  },
+  {
+   "file": "g-truncated.pdf",
+   "name": "g-truncated",
+   "kind": "bad",
+   "expect": {
+    "ok": false
+   }
+  },
+  {
+   "file": "g-garbage.pdf",
+   "name": "g-garbage",
+   "kind": "bad",
+   "expect": {
+    "ok": false
+   }
+  },
+  {
+   "file": "g-zero.pdf",
+   "name": "g-zero",
+   "kind": "bad",
+   "expect": {
+    "ok": false
+   }
+  },
+  {
+   "file": "g-notpdf.pdf",
+   "name": "g-notpdf",
+   "kind": "bad",
+   "expect": {
+    "ok": false
+   }
+  },
+  {
+   "file": "g-encrypted.pdf",
+   "name": "g-encrypted",
+   "kind": "bad",
+   "expect": {
+    "ok": false,
+    "password": true
+   }
+  }
+ ]
+}

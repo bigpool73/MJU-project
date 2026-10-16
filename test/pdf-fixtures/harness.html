@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Pdf 시험 하네스</title>
+<!-- test/pdf-e2e.js 가 file:// 와 http:// 로 여는 최소 페이지. 스크립트 순서가 index.html 에 넣을 순서와 같다. -->
+<script src="../../assets/vendor/pdfjs/pdf.min.js"></script>
+<script src="../../src/core.js"></script>
+<script src="../../src/parse.js"></script>
+<script src="../../src/pdf.js"></script>
+<script>
+  Pdf.configure({ workerSrc: '../../assets/vendor/pdfjs/pdf.worker.min.js' });
+  const toBuf = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)).buffer;
+  window.harness = {
+    // 파일 하나를 추출해 결과·소요 시간·대화 변환을 돌려준다
+    async run(b64, fileName) {
+      const t0 = performance.now();
+      const r = await Pdf.extract(toBuf(b64));
+      const ms = Math.round(performance.now() - t0);
+      const conv = r.ok ? Pdf.toConversation(r.text, { fileName }) : null;
+      return { r, ms, conv };
+    },
+    // 워커가 실제 Worker 인지(true) 메인 스레드 fake worker 인지(false)
+    async workerKind(b64) {
+      const task = pdfjsLib.getDocument({ data: new Uint8Array(toBuf(b64)), isEvalSupported: false, enableXfa: false, verbosity: 0 });
+      const doc = await task.promise;
+      const real = !!(task._worker && task._worker.port && typeof Worker !== 'undefined' && task._worker.port instanceof Worker);
+      await doc.destroy();
+      return real;
+    },
+    version: pdfjsLib.version,
+    location: location.href,
+  };
+</script>
+</head>
+<body>Pdf 시험 하네스</body>
+</html>

@@ -8,9 +8,20 @@ const entry = (o = {}) => ({
   disposition: 'edited', verifications: ['fact'], myChange: '내용을 고침', ...o,
 });
 
-test('정책 범위를 넘는 용도는 high 경고', () => {
-  const flags = C.checkEntry(entry({ purpose: 'draft' }), 2);
-  assert.ok(flags.some((f) => f.code === 'policy' && f.severity === 'high'));
+const sample = () => {
+  const d = C.blankDoc();
+  d.meta.student = '홍길동';
+  d.submission.text = '과제 본문입니다.';
+  d.conversations = [{ id: 'c1', provider: 'claude', source: '대화1.pdf', parsed: 'ok', turns: [{ id: 't1', prompt: '질문', response: '답변' }] }];
+  d.reflection = '성찰';
+  return d;
+};
+
+test('blankDoc은 v2 구조이며 원문(rawText)을 보관하지 않는다', () => {
+  const d = C.blankDoc();
+  assert.strictEqual(d.version, 2);
+  assert.deepStrictEqual(d.conversations, []);
+  assert.ok(!('rawText' in d));
 });
 
 test('정책 범위 안이면 경고 없음', () => {

@@ -106,8 +106,13 @@
 
   function canonicalEntry(e) {
     return JSON.stringify([
-      e.id, e.date, e.tool, e.purpose, e.prompt, e.response, e.disposition,
-      [...(e.verifications || [])].sort(), e.myChange || '',
+      doc.version,
+      [m.student, m.studentId, m.course, m.professor, m.assignment, m.assignmentBrief || ''],
+      doc.submission.text,
+      doc.conversations.map((c) => [c.id, c.provider, c.source || '', c.parsed, c.turns.map((t) => [t.id, t.prompt, t.response])]),
+      (doc.deletions || []).map((d) => [d.turnId, d.convId, round4(d.relevance), d.chars]),
+      doc.reflection || '',
+      doc.claimed ? [round4(doc.claimed.dependency), round4(doc.claimed.autonomy), Object.keys(doc.claimed.relevance).sort().map((k) => [k, round4(doc.claimed.relevance[k])])] : null,
     ]);
   }
 

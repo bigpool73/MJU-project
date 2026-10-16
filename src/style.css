@@ -1,17 +1,17 @@
 :root {
-  --bg: #f6f7f9; --card: #fff; --ink: #1c2330; --muted: #5d6676; --line: #dfe3ea;
-  --brand: #1d4e9e; --brand-ink: #fff; --warn-bg: #fff4d6; --warn-ink: #7a5300;
+  --bg: #edf2fb; --bg-top: #dfe9fa; --card: #fff; --ink: #0f1b38; --muted: #55648a; --line: #d3ddf0;
+  --brand: #0a2a86; --brand-ink: #fff; --accent: #0069ba; --warn-bg: #fff4d6; --warn-ink: #7a5300;
   --high-bg: #fde4e4; --high-ink: #9b1c1c; --ok-bg: #e0f4e6; --ok-ink: #17602e;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #12161d; --card: #1b212b; --ink: #e8ebf0; --muted: #9aa4b5; --line: #2d3644;
-    --brand: #6ea0f0; --brand-ink: #0c1626; --warn-bg: #3b3012; --warn-ink: #f2d27a;
+    --bg: #0a1226; --bg-top: #0f1b3a; --card: #111b34; --ink: #e7edfa; --muted: #9db0d6; --line: #243357;
+    --brand: #7fa6ff; --brand-ink: #0a1226; --accent: #4da6e8; --warn-bg: #3b3012; --warn-ink: #f2d27a;
     --high-bg: #3d1b1b; --high-ink: #f4a6a6; --ok-bg: #16331f; --ok-ink: #8fd8a6;
   }
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 "Pretendard", "Noto Sans KR", system-ui, sans-serif; }
+body { margin: 0; background: linear-gradient(180deg, var(--bg-top) 0, var(--bg) 340px) no-repeat, var(--bg); color: var(--ink); font: 15px/1.6 "Pretendard", "Noto Sans KR", system-ui, sans-serif; }
 .app-header, .tabs, main, footer { max-width: 920px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
 .app-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; padding-top: 24px; flex-wrap: wrap; }
 h1 { margin: 0; font-size: 1.6rem; }
@@ -66,16 +66,16 @@ footer { color: var(--muted); font-size: .8rem; padding-top: 16px; padding-botto
 .report { background: #fff; color: #111; border: 1px solid var(--line); border-radius: 8px; padding: 28px; margin-top: 16px; font-size: 13.5px; }
 .report h1 { font-size: 1.4rem; text-align: center; margin-bottom: 4px; }
 .report .sub { text-align: center; color: #555; margin: 0 0 16px; }
-.report h3 { font-size: 1rem; border-bottom: 2px solid #1d4e9e; padding-bottom: 2px; margin: 20px 0 8px; color: #1d4e9e; }
+.report h3 { font-size: 1rem; border-bottom: 2px solid #0a2a86; padding-bottom: 2px; margin: 20px 0 8px; color: #0a2a86; }
 .report table { width: 100%; border-collapse: collapse; }
 .report th, .report td { border: 1px solid #c8cdd6; padding: 5px 8px; text-align: left; vertical-align: top; }
-.report th { background: #eef2f8; width: 22%; font-weight: 600; }
+.report th { background: #edf2fb; width: 22%; font-weight: 600; }
 .report .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .report .stat { border: 1px solid #c8cdd6; border-radius: 6px; padding: 8px; text-align: center; }
-.report .stat b { display: block; font-size: 1.3rem; color: #1d4e9e; }
+.report .stat b { display: block; font-size: 1.3rem; color: #0a2a86; }
 .report .bar { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
 .report .bar span.l { width: 140px; flex: none; }
-.report .bar i { display: block; height: 12px; background: #1d4e9e; border-radius: 2px; }
+.report .bar i { display: block; height: 12px; background: #0a2a86; border-radius: 2px; }
 .report .rflag { margin: 3px 0; padding: 4px 8px; border-radius: 4px; }
 .report .rflag.high { background: #fde4e4; color: #9b1c1c; }
 .report .rflag.warn { background: #fff4d6; color: #7a5300; }
@@ -99,7 +99,10 @@ footer { color: var(--muted); font-size: .8rem; padding-top: 16px; padding-botto
   @page { margin: 16mm; }
 }
 
-/* ---- 로고 (흰 배경 이미지이므로 다크 모드에서도 흰 상자 위에 둔다) ---- */
-.brand { display: inline-block; margin-bottom: 10px; padding: 4px 8px; background: #fff; border-radius: 8px; line-height: 0; }
+/* ---- 로고 (투명 PNG. 어두운 배경에서는 남색이 묻히므로 흰 알약 위에 둔다) ---- */
+.brand { display: inline-block; margin-bottom: 10px; line-height: 0; }
 .brand-logo { display: block; height: 41px; width: auto; }
 .report-logo { display: block; height: 44px; width: auto; margin: 0 auto 10px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .brand { padding: 4px 10px; background: #fff; border-radius: 999px; }
+}

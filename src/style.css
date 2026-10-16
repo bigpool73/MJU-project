@@ -231,11 +231,3 @@ details.paste summary { cursor: pointer; font-weight: 600; font-size: .9rem; }
   .report .turn-card pre { max-height: none; }
   @page { margin: 16mm; }
 }
-
-/* ---- 로고 (투명 PNG. 어두운 배경에서는 남색이 묻히므로 흰 알약 위에 둔다) ---- */
-.brand { display: inline-block; margin-bottom: 10px; line-height: 0; }
-.brand-logo { display: block; height: 48px; width: auto; }
-.report-logo { display: block; height: 54px; width: auto; margin: 0 auto 10px; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .brand { padding: 4px 10px; background: #fff; border-radius: 999px; }
-}

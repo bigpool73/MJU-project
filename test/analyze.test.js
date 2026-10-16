@@ -656,7 +656,7 @@ test('summaryLine과 narrative: 형식, 필수 내용, 정직성 규칙(단정 �
     assert.ok(text.includes(`${r.summary.turnCount}개`));
     assert.ok(text.includes(`${Math.round(r.summary.dependency * 100)}%`));
     assert.ok(text.includes(A.intentLabel(r.turns[0].intent)) && text.includes(`${Math.round(r.turns[0].relevance * 100)}%`), '가장 연관도 높은 대화가 빠짐');
-    assert.ok(/추정/.test(text) && /링크로 검증/.test(text) && /하한/.test(text), '한계 문구가 빠짐');
+    assert.ok(/추정/.test(text) && /원본인지 이 도구가 검증하지 못/.test(text) && /하한/.test(text), '한계 문구가 빠짐');
     assert.ok(r.narrative[r.narrative.length - 1].includes('추정'), '한계는 마지막 줄');
   }
   // 명세의 예시 "요청: 개요 구성 · 연관도 87% · 과제 반영: 문장 4개(그대로 1, 수정 3)"와 같은 모양이 실제로 나온다

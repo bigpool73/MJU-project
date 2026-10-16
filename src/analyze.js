@@ -467,11 +467,13 @@
     const toks = tokenize(normalize(body), false);
     const counts = new Map();
     for (const g of toks) counts.set(g, (counts.get(g) || 0) + 1);
-    const anchor = Math.max(2, Math.ceil(toks.length / 500));
+    const anchor = Math.max(1.5, toks.length / 500);
     const sal = new Map();
     for (const [g, c] of counts) sal.set(g, Math.max(0.15, Math.min(1, Math.pow(c / anchor, 1.5))));
     for (const g of tokenize(normalize(title + '\n' + brief), false)) sal.set(g, 1);
-    return sal;
+    // 참조 어휘가 작을수록 우연히 겹칠 확률이 낮으므로 증거 문턱도 낮춘다 (어휘 600개 이상이면 최대)
+    const scale = Math.min(1, sal.size / 600);
+    return { sal, lo: 0.6 + 0.9 * scale, width: 2 + scale };
   }
 
   function makeWeighter() {
@@ -484,18 +486,18 @@
   }
 
   /** 한 문장(조각 집합)이 주제어를 얼마나 담는가(0~1 안팎). */
-  function unitRelevance(grams, sal, bw) {
+  function unitRelevance(grams, ref, bw) {
     let den = REL_SMOOTH;
     let num = 0;
     for (const g of grams) {
       if (g.indexOf(' ') >= 0) continue;
       const b = bw(g);
       den += b;
-      const s = sal.get(g);
+      const s = ref.sal.get(g);
       if (s !== undefined) num += b * s;
     }
-    // 공유한 주제어의 가중치 합이 작으면 우연 일치일 가능성이 높다: 1.5 이하면 0, 4.5 이상이면 전부 인정
-    return (Math.min(1, Math.max(0, (num - 1.5) / 3)) * num) / den;
+    // 공유한 주제어의 가중치 합이 문턱(lo) 이하면 우연 일치로 보고 0, lo+width 이상이면 전부 인정
+    return (Math.min(1, Math.max(0, (num - ref.lo) / ref.width)) * num) / den;
   }
 
   function topMean(scores, k) {
@@ -517,9 +519,9 @@
    * 응답은 문장별 점수의 상위 3개 평균을 써서 긴 응답의 일반 어휘가 점수를 희석하지 않게 한다.
    * 프롬프트에 내용어가 거의 없는 짧은 후속 질문('더 자세히')은 응답 점수만으로 본다.
    */
-  function turnRelevance(pUnits, rUnits, sal, bw) {
-    const pScores = pUnits.map((u) => unitRelevance(u.grams, sal, bw));
-    const rScores = rUnits.map((u) => unitRelevance(u.grams, sal, bw));
+  function turnRelevance(pUnits, rUnits, ref, bw) {
+    const pScores = pUnits.map((u) => unitRelevance(u.grams, ref, bw));
+    const rScores = rUnits.map((u) => unitRelevance(u.grams, ref, bw));
     let mass = 0;
     const seen = new Set();
     for (const u of pUnits) for (const g of u.grams) if (g.indexOf(' ') < 0 && !seen.has(g)) { seen.add(g); mass += bw(g); }
@@ -608,11 +610,11 @@
   const reuseRelevance = (reuse) => (reuse >= REUSE_MIN ? HIGH_THRESHOLD + ((REUSE_CAP - HIGH_THRESHOLD) * (reuse - REUSE_MIN)) / (1 - REUSE_MIN) : 0);
 
   function computeTurns(d, model, bw) {
-    const sal = buildReference(d.title, d.brief, d.body);
+    const ref = buildReference(d.title, d.brief, d.body);
     return d.turns.map((t) => {
       const pUnits = makeUnits(t.prompt);
       const rUnits = makeUnits(t.response);
-      const topical = turnRelevance(pUnits, rUnits, sal, bw);
+      const topical = turnRelevance(pUnits, rUnits, ref, bw);
       const reuse = topical >= REUSE_CAP ? 0 : reuseOf(pUnits.concat(rUnits), model, bw);
       const floor = reuse > 0 ? reuseRelevance(reuse) + 0.15 * topical : 0; // 옮겨 쓴 턴끼리 0.6에서 동점이 나지 않게 주제어 점수를 조금 더한다
       return { ...t, pUnits, rUnits, relevance: r4(Math.max(topical, floor)) };

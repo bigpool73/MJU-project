@@ -1,15 +1,22 @@
-# v2 설계 명세 (링크 기반 흐름)
+# v2 설계 명세 (PDF 첨부 흐름)
 
 이 문서는 모듈 간 계약이다. 구현은 이 인터페이스를 지킨다. 바꿔야 하면 코드를 고치기 전에 보고한다.
 
 ## 사용 흐름
 1. **인적사항·과목**: 이름, 학번, 과목, 교수, 과제명, (선택) 과제 안내문
-2. **자료 첨부**: 과제 결과물(붙여넣기 또는 .txt/.md 업로드) + AI 대화(공유 링크 + 공유 페이지의 대화 붙여넣기)를 여러 개 추가
+2. **자료 첨부**: 과제 결과물(**PDF**, .txt/.md, 또는 붙여넣기) + AI 대화 **PDF**(여러 개)
 3. **분석 결과**: 의존도·주체성, 대화별 연관도(내림차순), 대화 요약, 과제 본문에 AI 반영 부분 토글 표시, 연관도가 낮은 대화 삭제
 4. **제출**: 인쇄/PDF + `.json`. 교수는 같은 앱의 ‘교수용’ 탭에서 `.json`을 열어 같은 화면과 검증 결과를 본다.
+- 앱 상단과 내역서(화면·인쇄 모두) 머리글에 명지대학교 로고(`assets/mju-logo.jpg`)가 들어간다.
 
-## 왜 붙여넣기가 필요한가 (사실)
-브라우저의 정적 페이지는 `chatgpt.com/share/...`, `claude.ai/share/...`, `gemini.google.com/share/...` 같은 외부 페이지를 CORS 때문에 읽을 수 없다. 서버가 대신 읽어 오는 방법도 해당 서비스가 봇 접근을 막거나 자바스크립트로 그려서 불안정할 수 있고, 이 환경에서는 실제 링크로 검증하지 못했다. 그래서 v2는 **링크는 출처로 기록하고, 대화 본문은 붙여넣기로 받는다.** 서버 방식은 인터페이스 자리(`LinkResolver`)만 두고 구현하지 않는다.
+## 왜 링크가 아니라 PDF인가 (사실)
+브라우저의 정적 페이지는 `chatgpt.com/share/...` 같은 외부 페이지를 CORS 때문에 읽을 수 없고, 서버가 대신 읽는 방법도 서비스가 봇 접근을 막거나 자바스크립트로 그려서 불안정하다. 반면 학생은 대화 화면에서 Ctrl+P → “PDF로 저장”(또는 서비스의 PDF 내보내기)으로 대화를 PDF로 만들 수 있고, 브라우저가 PDF 텍스트를 직접 추출할 수 있다. 그래서 v2의 입력은 PDF다. 붙여넣기는 PDF가 안 될 때의 보조 수단이다.
+
+### 모르는 것 (구현 시 지어내지 않는다)
+서비스별 인쇄 PDF에 “나/ChatGPT” 같은 **역할 표지가 글자로 들어가는지는 확인되지 않았다.** 화면에서 숨겨진 글자는 인쇄에 나오지 않을 수 있다. 그래서:
+- 표지가 인식되면 `Parse.parseTranscript`로 턴을 나눈다(`parsed:'ok'`).
+- 인식 못 하면 `parsed:'unparsed'`. 이때 텍스트를 문단 묶음(의사 턴, `prompt:''`)으로 나눠 연관도 정렬·삭제가 동작하게 한다. 역할을 모르므로 학생이 AI에게 보낸 자기 글도 응답 쪽으로 세어져 **의존도가 실제보다 높게 나올 수 있다(상한 추정).** UI는 이 상태를 눈에 띄게 알린다.
+- 스캔본(글자 없는 이미지 PDF)은 OCR을 지원하지 않는다. 감지해서 안내한다.
 
 ## 데이터 모델 (`Doc`)
 ```
@@ -23,11 +30,12 @@ Doc = {
   claimed: { dependency, autonomy, relevance: { [turnId]: number } } | null,   // export 시 채움
   code: string | null                                                         // export 시 채움
 }
-Conversation = { id, provider: 'chatgpt'|'claude'|'gemini'|'other', url, parsed: 'ok'|'unparsed', turns: Turn[] }
+Conversation = { id, provider: 'chatgpt'|'claude'|'gemini'|'other', source, parsed: 'ok'|'unparsed', turns: Turn[] }
+                 // source: 첨부한 PDF 파일명, 붙여넣기면 ''
 Turn         = { id, prompt, response }
 Deletion     = { turnId, convId, relevance, chars }     // 삭제된 대화의 내용은 남기지 않는다
 ```
-- 붙여넣은 원문(`rawText`)은 저장하지 않는다. 파싱한 `turns`만 저장한다. 삭제한 대화가 원문에 남으면 안 되기 때문이다.
+- 원문(PDF 바이트, 추출한 전체 텍스트)은 저장하지 않는다. 파싱한 `turns`만 저장한다. 삭제한 대화가 원문에 남으면 안 되기 때문이다.
 - 분석 결과는 저장하지 않고 항상 `Analyze.run(doc)`으로 다시 계산한다. `claimed`는 검증용 사본이다.
 
 ## `Parse` (`src/parse.js`, UMD → `root.Parse`)
@@ -38,6 +46,17 @@ Parse.parseTranscript(text) → { turns: [{prompt, response}], ok: boolean, note
 - 역할 표지는 한국어·영어 UI 둘 다 지원: `나의 말:` `You said:` `User:` `Human:` `사용자` `ChatGPT의 말:` `ChatGPT said:` `Assistant:` `Claude:` `Gemini:` `AI:` `Q:` `A:` 등.
 - 표지를 못 찾으면 `ok:false`, 전체를 하나의 응답으로 보존(`prompt:''`), `notes`에 사유.
 - 실제 각 서비스의 복사 형식은 검증하지 못했으므로 표지 목록은 확장 가능한 배열로 둔다.
+
+## `Pdf` (`src/pdf.js`, UMD → `root.Pdf`) — PDF 담당
+```
+Pdf.extract(arrayBuffer) → Promise<{ ok, text, pageCount, notes: string[] }>   // 예외를 던지지 않는다
+Pdf.buildText(pages)     → string    // 순수 함수: pages = [{ items: [{ str, x, y, w, h, font? }] }] → 문단이 복원된 텍스트
+Pdf.toConversation(text, { fileName, provider? }) → Conversation            // Parse.parseTranscript 사용, 실패 시 의사 턴 분할
+Pdf.guessProvider(text) → 'chatgpt'|'claude'|'gemini'|'other'              // 본문 속 서비스명으로 추정, 확신 없으면 'other'
+```
+- `buildText`는 인쇄 PDF의 머리글/바닥글(날짜, 제목, URL, `n/m` 쪽수)처럼 **쪽마다 반복되는 줄을 제거**하고, 줄 단위로 끊긴 문장을 문단으로 이어 붙인다(세로 간격으로 문단 구분). 분석 엔진이 줄바꿈을 문장 경계로 쓰기 때문에 쪽·줄 바꿈이 문장을 쪼개면 안 된다.
+- PDF 라이브러리는 `assets/vendor/pdfjs/` 에 **버전을 고정해 포함**한다(CDN 의존 없음, file://와 https 모두에서 동작해야 함 → 클래식 스크립트 빌드).
+- 입력 제한: 파일 30MB, 300쪽 초과 시 `ok:false` + 안내. 암호화·손상 PDF는 `ok:false`.
 
 ## `Analyze` (`src/analyze.js`, UMD → `root.Analyze`)
 ```
@@ -93,6 +112,7 @@ SentenceResult = {
 ## 파일 소유권 (병렬 작업 시 충돌 방지)
 - `src/analyze.js`, `test/analyze.test.js`, `test/fixtures/` → 엔진 담당
 - `src/parse.js`, `test/parse.test.js` → 파서 담당
+- `src/pdf.js`, `test/pdf.test.js`, `test/pdf-fixtures/`, `assets/vendor/pdfjs/` → PDF 담당
 - `test/heldout/`, `test/heldout.test.js` → 블라인드 검증 담당 (엔진 구현을 읽지 않는다)
 - `index.html`, `src/app.js`, `src/style.css` → 화면 담당
 - `src/core.js`, `test/core.test.js`, `docs/spec-v2.md` → 조정자

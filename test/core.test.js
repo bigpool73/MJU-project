@@ -15,7 +15,7 @@ const sample = () => {
   const d = C.blankDoc();
   d.meta.student = '홍길동';
   d.submission.text = '과제 본문입니다.';
-  d.conversations = [{ id: 'c1', provider: 'claude', url: 'https://claude.ai/share/x', parsed: 'ok', turns: [{ id: 't1', prompt: '질문', response: '답변' }] }];
+  d.conversations = [{ id: 'c1', provider: 'claude', source: '대화1.pdf', parsed: 'ok', turns: [{ id: 't1', prompt: '질문', response: '답변' }] }];
   d.reflection = '성찰';
   return d;
 };

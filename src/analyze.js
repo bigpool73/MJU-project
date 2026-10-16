@@ -75,11 +75,14 @@
     lot lots able case approach factor aspect issue impact effect result results role level number part form type kind
   `);
 
+  /** dropping → dropp → drop (l·s·z·모음은 제외: falling → fall) */
+  const undouble = (w) => (/([^aeiouls])\1$/.test(w) ? w.slice(0, -1) : w);
+
   function stem(w) {
     if (w.length <= 3 || (w.charCodeAt(0) >= 48 && w.charCodeAt(0) <= 57)) return w;
     if (w.endsWith('ies') && w.length > 4) return w.slice(0, -3) + 'y';
-    if (w.endsWith('ing') && w.length > 5) w = w.slice(0, -3);
-    else if (w.endsWith('ed') && w.length > 4) w = w.slice(0, -2);
+    if (w.endsWith('ing') && w.length > 5) w = undouble(w.slice(0, -3));
+    else if (w.endsWith('ed') && w.length > 4) w = undouble(w.slice(0, -2));
     else if (w.endsWith('s') && !/(ss|us|is)$/.test(w)) w = w.slice(0, -1);
     // 'cause'와 'causes/caused/causing'이 같은 어간이 되도록 끝의 e를 뗀다
     if (w.endsWith('e') && w.length > 3) w = w.slice(0, -1);
@@ -393,11 +396,23 @@
     ['explain', new RegExp(`설명|알려|뭐야|뭔가요|무엇|뭐가|차이|의미|개념|뜻|원리|이유|왜|어떻게|어떤|이란|인가요|${lat('explain|difference|meaning|define|describe|elaborate|why')}|what (?:is|are|does)|how (?:do|does|to|can)|tell me|more detail`, 'i')],
   ];
 
-  /** 긴 프롬프트는 붙여넣은 학생 글 안의 단어에 속지 않도록 앞뒤 지시문 부분만 본다. */
+  /**
+   * 붙여넣은 학생 글 안의 단어에 속지 않도록 지시문 자리만 본다. 줄이 셋 이상이면 첫 줄과 마지막 줄,
+   * 두 줄이면 짧은 쪽(긴 쪽은 붙여넣은 글로 본다), 한 줄이 아주 길면 앞뒤 100자. 짧은 프롬프트는 전체를 본다.
+   */
+  function instructionPart(prompt) {
+    const s = String(prompt || '').normalize('NFC');
+    const lines = s.split('\n').map((l) => l.trim()).filter(Boolean);
+    if (lines.length >= 3) return `${lines[0].slice(0, 200)} ${lines[lines.length - 1].slice(-200)}`;
+    if (lines.length === 2) {
+      const short = lines.filter((l) => l.length <= 200);
+      if (short.length) return short.join(' ');
+    }
+    return s.length > 400 ? `${s.slice(0, 100)} ${s.slice(-100)}` : s;
+  }
+
   function classifyIntent(prompt) {
-    let s = String(prompt || '');
-    if (s.length > 400) s = s.slice(0, 160) + ' ' + s.slice(-160);
-    s = s.normalize('NFC');
+    const s = instructionPart(prompt);
     for (const [name, re] of INTENT_RULES) if (re.test(s)) return name;
     return 'other';
   }

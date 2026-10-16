@@ -90,14 +90,18 @@
   //  - 'You said' / 'ChatGPT said': 위 한국어 문구의 영어 UI 대응으로 추정. 검색으로 확인하지 못했다.
   //  - 'Gemini said' / 'Gemini의 말': 추정. 검색으로 확인하지 못했다.
   //    (제3자 북마클릿이 'User'/'Gemini' 제목으로 내보낸다는 검색 요약만 있고, Gemini 자체 형식은 아니다.)
+  //  - 'User prompt' / 'Response': 확인됨 (2026-10-16). 사용자가 올린 실제 Gemini(gemini.google.com/app) 대화를
+  //    Chrome 154에서 Ctrl+P로 저장한 PDF에서 관찰했다. 한국어 화면(hl=ko)인데도 표지는 영어로 나왔고, 표지 뒤 같은 줄에
+  //    본문이 이어진다(예: "User prompt: 질문", "Response: 답변"). 대화가 여러 턴일 때의 모양은 한 턴짜리 파일만 봐서 모른다.
   //  - Claude 공유 페이지를 복사했을 때의 모양은 확인하지 못했다. 'Human'/'Claude' 는 일반적인 수동 표기(추정).
   //  - 그 밖의 User/Assistant/AI/사용자/Q/A 등은 사람이 직접 붙이는 관례 표기이며 서비스 형식이 아니다.
   const MARKERS = [
     { role: 'user', bare: true, labels: ['나의 말', '사용자의 말', 'You said'] },
     { role: 'assistant', bare: true, labels: ['ChatGPT의 말', 'ChatGPT said', 'Gemini의 말', 'Gemini said'] },
     { role: 'user', bare: true, labels: ['사용자', 'User', 'Human'] },
-    { role: 'user', labels: ['You'] },
+    { role: 'user', labels: ['You', 'User prompt'] },
     { role: 'assistant', bare: true, labels: ['어시스턴트', 'Assistant'] },
+    { role: 'assistant', labels: ['Response'] },
     // 이름만 있는 줄('ChatGPT', 'Claude')은 공유 페이지 머리글일 수 있어 콜론이 있을 때만 표지로 본다.
     { role: 'assistant', labels: ['AI', 'ChatGPT', 'GPT', 'Claude', 'Gemini'] },
     { role: 'user', weak: true, labels: ['Q'] },

@@ -13,7 +13,7 @@ module.exports = {
   },
   conversations: [
     {
-      id: 'c1', provider: 'chatgpt', url: 'https://chatgpt.com/share/68e3b2d6-8f14-8004-a5c9-4d7e1b0f3a82', turns: [
+      id: 'c1', provider: 'chatgpt', source: '대화-c1-chatgpt.pdf', turns: [
         {
           id: 'c1t1', label: 'related',
           prompt: '영어작문 과제인데 대학생 봉사활동 의무화 찬성하는 에세이 쓸 거야. reasons 두세 개만 brainstorm 해줘. 영어로 답해줘',
@@ -82,7 +82,7 @@ I hope this helps. Feel free to ask if you need more examples.`,
       ],
     },
     {
-      id: 'c2', provider: 'chatgpt', url: 'https://chatgpt.com/share/68e3c4f1-2a59-8004-b7d3-9e6c0a5f1d47', turns: [
+      id: 'c2', provider: 'chatgpt', source: '대화-c2-chatgpt.pdf', turns: [
         {
           id: 'c2t1', label: 'related', traps: ['draft'],
           prompt: '내 intro 문단 grammar랑 어색한 표현 고쳐줘. 영어로 답해줘\n\nNowadays many college students are busy with study and part-time jobs. But I think community service should be mandatory for them. The first reason is that it can help students to learn about the real society.',
@@ -115,7 +115,7 @@ In conclusion, I believe that universities should make community service mandato
       ],
     },
     {
-      id: 'c3', provider: 'claude', url: 'https://claude.ai/share/6e2a9f03-b185-4d7c-92e6-0a4c7d8b1f53', turns: [
+      id: 'c3', provider: 'claude', source: '대화-c3-claude.pdf', turns: [
         {
           id: 'c3t1', label: 'borderline',
           prompt: '에세이에서 쓸 수 있는 transition words 리스트 줘. however, moreover 말고 다른 것도',
@@ -159,7 +159,7 @@ In conclusion, I believe that universities should make community service mandato
       ],
     },
     {
-      id: 'c4', provider: 'gemini', url: 'https://gemini.google.com/share/c07d3a82e4f9', turns: [
+      id: 'c4', provider: 'gemini', source: '대화-c4-gemini.pdf', turns: [
         {
           id: 'c4t1', label: 'unrelated', traps: ['lexicalOverlap'],
           prompt: '동아리 MT에서 내가 간식 담당 volunteer 했는데ㅋㅋ 10명이 먹을 과자랑 치킨 뭐 사면 좋을까',
@@ -187,7 +187,7 @@ In conclusion, I believe that universities should make community service mandato
       ],
     },
     {
-      id: 'c5', provider: 'chatgpt', url: 'https://chatgpt.com/share/68e3d9a2-6b30-8004-8e41-c1f5a7d2b904', turns: [
+      id: 'c5', provider: 'chatgpt', source: '대화-c5-chatgpt.pdf', turns: [
         {
           id: 'c5t1', label: 'unrelated',
           prompt: '일반물리 문제 풀어줘. 초속 20m로 달리던 차가 브레이크를 밟아 -4m/s²로 감속하면 정지거리는?',

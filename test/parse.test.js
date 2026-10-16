@@ -399,3 +399,37 @@ test('아무 문자열이나 넣어도 예외 없이 계약된 모양을 돌려�
     assert.deepStrictEqual(parse(s), r); // 결정적
   }
 });
+
+// 실제 Gemini 대화를 Chrome 154에서 Ctrl+P로 저장한 PDF(2026-10-16)에서 관찰한 구조를 따른다.
+// 내용은 지어낸 것이다. 제목 줄과 대화 URL 줄이 앞에 오고, 표지는 한국어 화면에서도 영어("User prompt:", "Response:")이며
+// 표지 뒤 같은 줄에 본문이 이어진다. 확인한 것은 한 턴짜리 파일뿐이라 여러 턴의 모양은 모른다.
+test('실제 Gemini 인쇄 PDF 구조: User prompt / Response', () => {
+  const text = [
+    '도서관 이용 안내',
+    'https://gemini.google.com/app/0000000000000000',
+    '',
+    'User prompt: 도서관 대출 규정을 알려줘',
+    '',
+    'Response: 요청하신 규정의 주요 내용은 다음과 같습니다.',
+    '',
+    '대출 기간',
+    '',
+    '일반 도서는 14일 동안 대출할 수 있습니다.',
+  ].join('\n');
+  const r = Parse.parseTranscript(text);
+  assert.strictEqual(r.ok, true);
+  assert.strictEqual(r.turns.length, 1);
+  assert.strictEqual(r.turns[0].prompt, '도서관 대출 규정을 알려줘');
+  assert.match(r.turns[0].response, /^요청하신 규정의 주요 내용은/);
+  assert.match(r.turns[0].response, /14일 동안 대출/);
+  assert.ok(!r.turns[0].response.includes('gemini.google.com'));
+});
+
+test('Gemini 형식: 여러 턴이 이어지는 경우 턴별로 나뉜다 (여러 턴 모양은 추정)', () => {
+  const text = [
+    'User prompt: 첫 질문', 'Response: 첫 답변',
+    'User prompt: 두 번째 질문', 'Response: 두 번째 답변',
+  ].join('\n');
+  const r = Parse.parseTranscript(text);
+  assert.deepStrictEqual(r.turns.map((t) => [t.prompt, t.response]), [['첫 질문', '첫 답변'], ['두 번째 질문', '두 번째 답변']]);
+});

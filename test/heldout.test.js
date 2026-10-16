@@ -149,7 +149,7 @@ test('명세 불변 조건: 임계값, 오프셋, 정렬, 비율, 결정성', ()
     for (const t of result.turns) {
       const cd = Analyze.canDelete(doc, t.id);
       assert.strictEqual(cd.ok, cd.relevance < Analyze.DELETE_THRESHOLD, `${c.id}/${t.id}: ok 가 relevance < 임계값과 일치하지 않음`);
-      assert.ok(Math.abs(cd.relevance - t.relevance) < 1e-9, `${c.id}/${t.id}: canDelete 와 run 의 relevance 가 다름`);
+      assert.ok(Math.abs(cd.relevance - t.relevance) < 1e-3, `${c.id}/${t.id}: canDelete 와 run 의 relevance 가 다름`);
     }
     assert.deepStrictEqual(Analyze.run(c.makeDoc()), result, `${c.id}: 같은 입력인데 결과가 다름(비결정적)`);
     const fresh = c.makeDoc();

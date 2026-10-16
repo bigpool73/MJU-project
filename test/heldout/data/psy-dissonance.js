@@ -13,7 +13,7 @@ module.exports = {
   },
   conversations: [
     {
-      id: 'c1', provider: 'chatgpt', url: 'https://chatgpt.com/share/68f4c5e7-9d21-8004-b6a8-3e1f0c7d5a29', turns: [
+      id: 'c1', provider: 'chatgpt', source: '대화-c1-chatgpt.pdf', turns: [
         {
           id: 'c1t1', label: 'related',
           prompt: '인지부조화 이론 쉽게 설명해줘. 페스팅거 실험도 같이',
@@ -99,7 +99,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c2', provider: 'claude', url: 'https://claude.ai/share/d83b1f56-4a09-4c72-b5e1-8f0d2a6c9e47', turns: [
+      id: 'c2', provider: 'claude', source: '대화-c2-claude.pdf', turns: [
         {
           id: 'c2t1', label: 'related', traps: ['draft'],
           prompt: '레포트 이론 설명 부분인데 문장 좀 다듬어줘\n\n인지부조화(cognitive dissonance)란 자신이 가진 생각이나 태도, 행동이 서로 맞지 않을 때 느끼는 불편한 심리 상태를 말한다. 이 이론은 사회심리학자 페스팅거가 1957년에 처음 내놓았다. 사람들은 이런 불편함을 줄이려고 생각을 바꾸거나 행동을 정당화하는 쪽으로 움직인다고 한다.',
@@ -128,7 +128,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c3', provider: 'gemini', url: 'https://gemini.google.com/share/4a6e0c19d7b3', turns: [
+      id: 'c3', provider: 'gemini', source: '대화-c3-gemini.pdf', turns: [
         {
           id: 'c3t1', label: 'borderline',
           prompt: '심리학 레포트에서 본문 인용 (페스팅거, 1957) 이렇게 쓰는 게 맞아? 참고문헌은 어떻게 써?',
@@ -162,7 +162,7 @@ Festinger, L. (1957). *A theory of cognitive dissonance*. Stanford University Pr
       ],
     },
     {
-      id: 'c4', provider: 'chatgpt', url: 'https://chatgpt.com/share/68f4d6a0-3c58-8004-9f2d-6a1b8e4c0d73', turns: [
+      id: 'c4', provider: 'chatgpt', source: '대화-c4-chatgpt.pdf', turns: [
         {
           id: 'c4t1', label: 'unrelated', traps: ['lexicalOverlap'],
           prompt: '이번 달 소비가 너무 많아서 월급날까지 버텨야 되는데ㅠㅠ 오늘 저녁 치킨 시킬까 말까 고민 중',
@@ -190,7 +190,7 @@ Festinger, L. (1957). *A theory of cognitive dissonance*. Stanford University Pr
       ],
     },
     {
-      id: 'c5', provider: 'gemini', url: 'https://gemini.google.com/share/91f2b7c5e0a8', turns: [
+      id: 'c5', provider: 'gemini', source: '대화-c5-gemini.pdf', turns: [
         {
           id: 'c5t1', label: 'unrelated',
           prompt: '고양이 사료 바꾸려는데 습식이랑 건식 비율 어떻게 해야 돼?',
@@ -220,7 +220,7 @@ Festinger, L. (1957). *A theory of cognitive dissonance*. Stanford University Pr
       ],
     },
     {
-      id: 'c6', provider: 'chatgpt', url: 'https://chatgpt.com/share/68f4e1b8-7a64-8004-a0c3-5d9e2f6b8c14', turns: [
+      id: 'c6', provider: 'chatgpt', source: '대화-c6-chatgpt.pdf', turns: [
         {
           id: 'c6t1', label: 'unrelated',
           prompt: '파이썬 리스트 컴프리헨션 예제 몇 개만 보여줘',

@@ -13,7 +13,7 @@ module.exports = {
   },
   conversations: [
     {
-      id: 'c1', provider: 'chatgpt', url: 'https://chatgpt.com/share/68a1c3e2-5b7d-8004-9a3f-2f6d1c0e7a11', turns: [
+      id: 'c1', provider: 'chatgpt', source: '대화-c1-chatgpt.pdf', turns: [
         {
           id: 'c1t1', label: 'related',
           prompt: '교양 글쓰기 과제로 일회용 컵 보증금제 찬성하는 논증문 써야 되는데 근거를 3가지 정도 알려줘',
@@ -106,7 +106,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c2', provider: 'chatgpt', url: 'https://chatgpt.com/share/68a1d7f0-9c42-8004-b1e5-7a0e4d3c9b52', turns: [
+      id: 'c2', provider: 'chatgpt', source: '대화-c2-chatgpt.pdf', turns: [
         {
           id: 'c2t1', label: 'related', traps: ['draft'],
           prompt: '서론 썼는데 어색한 부분이랑 맞춤법 좀 봐줘\n\n요즘 카페에 가면 일회용컵을 쓰는 사람이 정말 많다. 나도 가끔 텀블러를 깜빡해서 일회용컵을 받아올때가 있는데 그때마다 마음이 불편하다. 이렇게 쓰고 버려지는 컵이 한해에 수십억개나 된다는것은 환경에 큰 부담이 된다고 생각한다. 그래서 나는 일회용 컵 보증금제를 도입하는것에 찬성한다.',
@@ -141,7 +141,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c3', provider: 'claude', url: 'https://claude.ai/share/3b8e5a10-72c4-4f19-a6d8-e1c05b9d7f23', turns: [
+      id: 'c3', provider: 'claude', source: '대화-c3-claude.pdf', turns: [
         {
           id: 'c3t1', label: 'borderline',
           prompt: '논증문 쓸 때 상대 의견 인정하고 반박하는 표현 뭐가 있어? 물론 ~ 하지만 말고 다른 것도',
@@ -187,7 +187,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c4', provider: 'gemini', url: 'https://gemini.google.com/share/7d2f4a9c1b83', turns: [
+      id: 'c4', provider: 'gemini', source: '대화-c4-gemini.pdf', turns: [
         {
           id: 'c4t1', label: 'unrelated',
           prompt: '자취 3년차인데 냉장고에 계란이랑 김치밖에 없어. 저녁 뭐 해먹지?',
@@ -238,7 +238,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c5', provider: 'chatgpt', url: 'https://chatgpt.com/share/68a2b410-3e19-8004-8c6d-0f5a7e2b1d94', turns: [
+      id: 'c5', provider: 'chatgpt', source: '대화-c5-chatgpt.pdf', turns: [
         {
           id: 'c5t1', label: 'unrelated',
           prompt: '미적분 부분적분 ∫ x e^x dx 이거 어떻게 풀어? 내일 중간고사임ㅠ',
@@ -255,7 +255,7 @@ u를 고를 때는 미분하면 단순해지는 함수를 u로 잡는 것이 요
       ],
     },
     {
-      id: 'c6', provider: 'chatgpt', url: 'https://chatgpt.com/share/68a2c8d5-71aa-8004-9e03-5b6c1a8f2d07', turns: [
+      id: 'c6', provider: 'chatgpt', source: '대화-c6-chatgpt.pdf', turns: [
         {
           id: 'c6t1', label: 'unrelated', traps: ['lexicalOverlap'],
           prompt: '남친이 카톡 답장을 하루종일 안 해서 싸웠는데 내가 너무 예민한 걸까? 자취방 보증금 문제로 이미 신경 쓰이는 상태였음',

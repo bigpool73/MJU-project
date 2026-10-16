@@ -4,7 +4,7 @@
  *
  * 본문은 조각(segment)을 이어 붙여 코드로 만들고, 오프셋·정답 라벨도 코드로 계산한다.
  * 그래서 "이 문장은 AI 응답에서 왔다 / 학생이 직접 썼다"가 구성으로 확정된다.
- * 케이스 원자료는 ./data/*.js, 목록과 export 는 ./cases.js.
+ * 케이스 원자료는 ./data/*.js, 목록과 export 는 ./cases.js. Conversation 은 명세(PDF 첨부 흐름)의 { id, provider, source, parsed, turns } 모양으로 만든다.
  *
  * 조각 종류
  *   verbatim      AI 응답 문장을 마크다운만 벗겨 그대로 (find: 응답 안 유일한 부분 문자열, 또는 text 직접)
@@ -138,7 +138,7 @@ function build(raw) {
     d.meta = { ...raw.meta };
     d.submission.text = text;
     d.conversations = convs.map((c) => ({
-      id: c.id, provider: c.provider, url: c.url, parsed: 'ok',
+      id: c.id, provider: c.provider, source: c.source, parsed: 'ok',
       turns: c.turns.map((t) => ({ id: t.id, prompt: t.prompt, response: t.response })),
     }));
     return d;

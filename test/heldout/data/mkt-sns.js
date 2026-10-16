@@ -13,7 +13,7 @@ module.exports = {
   },
   conversations: [
     {
-      id: 'c1', provider: 'chatgpt', url: 'https://chatgpt.com/share/68c1d4a9-7b30-8004-9c52-6e8f3a1b0d27', turns: [
+      id: 'c1', provider: 'chatgpt', source: '대화-c1-chatgpt.pdf', turns: [
         {
           id: 'c1t1', label: 'related',
           prompt: '카페 SNS 마케팅 STP랑 4P로 분석하는 틀 알려줘',
@@ -106,7 +106,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c2', provider: 'gemini', url: 'https://gemini.google.com/share/e5a47c20b9d6', turns: [
+      id: 'c2', provider: 'gemini', source: '대화-c2-gemini.pdf', turns: [
         {
           id: 'c2t1', label: 'related', traps: ['draft'],
           prompt: '보고서 첫 부분 초안인데 문장 좀 매끄럽게 해줘\n\n온도커피는 학교 근처에 있는 작은 동네 카페로 내가 일 년째 아르바이트를 하고 있는 곳이다. 가게 인스타그램 계정의 팔로워는 약 1,200명인데 올라오는 게시물에 대한 반응은 많지 않은 편이다. 손님은 주로 근처 대학교 학생과 직장인들이다.',
@@ -135,7 +135,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c3', provider: 'claude', url: 'https://claude.ai/share/58d0e2b7-1c94-4a36-b7f5-93a2c6e48d10', turns: [
+      id: 'c3', provider: 'claude', source: '대화-c3-claude.pdf', turns: [
         {
           id: 'c3t1', label: 'borderline',
           prompt: '보고서 목차 어떻게 짜면 좋을까? 분량은 A4 5장 정도야',
@@ -165,7 +165,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c4', provider: 'chatgpt', url: 'https://chatgpt.com/share/68c1e8f3-3d51-8004-a7b6-0c2e9d4f6a18', turns: [
+      id: 'c4', provider: 'chatgpt', source: '대화-c4-chatgpt.pdf', turns: [
         {
           id: 'c4t1', label: 'unrelated', traps: ['lexicalOverlap'],
           prompt: '인스타 보는데 광고가 계속 떠서 짜증나ㅋㅋ 그건 그렇고 점심 학식 vs 편의점 도시락 뭐 먹을까',

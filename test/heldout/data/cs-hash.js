@@ -16,7 +16,7 @@ module.exports = {
   },
   conversations: [
     {
-      id: 'c1', provider: 'chatgpt', url: 'https://chatgpt.com/share/68b0a7c1-4e26-8004-8d1b-3c9a5f7e2b60', turns: [
+      id: 'c1', provider: 'chatgpt', source: '대화-c1-chatgpt.pdf', turns: [
         {
           id: 'c1t1', label: 'related',
           prompt: '해시테이블에서 충돌이 왜 생기는지랑 체이닝, 개방주소법 차이 설명해줘',
@@ -108,7 +108,7 @@ class ChainedHashTable:
       ],
     },
     {
-      id: 'c2', provider: 'claude', url: 'https://claude.ai/share/c41f08ad-96b3-4a5e-8f27-6d13b0e9a7c4', turns: [
+      id: 'c2', provider: 'claude', source: '대화-c2-claude.pdf', turns: [
         {
           id: 'c2t1', label: 'related', traps: ['draft'],
           prompt: '레포트 서론 초안인데 문장 좀 다듬어줘\n\n해시 테이블은 key로 value를 바로 꺼낼 수 있어서 검색이 빠른 자료구조라고 배웠다. 문제는 서로 다른 key가 같은 칸에 배정되는 충돌인데 이걸 푸는 방법에 따라 속도 차이가 꽤 난다. 이번 레포트에서는 체이닝과 선형 탐사를 직접 구현해서 실행 시간을 재 보았다.',
@@ -139,7 +139,7 @@ class ChainedHashTable:
       ],
     },
     {
-      id: 'c3', provider: 'gemini', url: 'https://gemini.google.com/share/b93e5d70a2c1', turns: [
+      id: 'c3', provider: 'gemini', source: '대화-c3-gemini.pdf', turns: [
         {
           id: 'c3t1', label: 'borderline',
           prompt: '파이썬에서 코드 실행 시간 재는 방법 time.time이랑 perf_counter 차이가 뭐야?',
@@ -175,7 +175,7 @@ class ChainedHashTable:
       ],
     },
     {
-      id: 'c4', provider: 'chatgpt', url: 'https://chatgpt.com/share/68b0b9d4-2a73-8004-a6e8-1d4c7b0f9e35', turns: [
+      id: 'c4', provider: 'chatgpt', source: '대화-c4-chatgpt.pdf', turns: [
         {
           id: 'c4t1', label: 'unrelated', traps: ['lexicalOverlap'],
           prompt: '롤 하다가 팀원이랑 충돌나서 짜증남ㅋㅋ 이번 판 탑 키 못 눌러서 졌는데 골드에서 플래티넘 가려면 뭐부터 해야돼?',
@@ -225,7 +225,7 @@ class ChainedHashTable:
       ],
     },
     {
-      id: 'c5', provider: 'chatgpt', url: 'https://chatgpt.com/share/68b0c2e8-8f10-8004-b3a9-5e7d2c1a0f48', turns: [
+      id: 'c5', provider: 'chatgpt', source: '대화-c5-chatgpt.pdf', turns: [
         {
           id: 'c5t1', label: 'unrelated',
           prompt: '한국사 시험 범위가 임진왜란이랑 병자호란인데 순서랑 핵심만 정리해줘',

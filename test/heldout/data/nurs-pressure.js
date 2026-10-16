@@ -13,7 +13,7 @@ module.exports = {
   },
   conversations: [
     {
-      id: 'c1', provider: 'chatgpt', url: 'https://chatgpt.com/share/68d2a1b5-6c48-8004-b0e7-2f9d5a3c8e61', turns: [
+      id: 'c1', provider: 'chatgpt', source: '대화-c1-chatgpt.pdf', turns: [
         {
           id: 'c1t1', label: 'related',
           prompt: '욕창 위험 사정 도구 브레이든 척도 항목이랑 점수 해석 알려줘',
@@ -84,7 +84,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c2', provider: 'claude', url: 'https://claude.ai/share/a7c3f149-0d82-4be5-9a61-d5e8b2f70c39', turns: [
+      id: 'c2', provider: 'claude', source: '대화-c2-claude.pdf', turns: [
         {
           id: 'c2t1', label: 'related', traps: ['draft'],
           prompt: '사례 보고서 사정 부분 초안인데 간호기록 문체로 다듬어줘\n\n대상자는 70대 남성으로 뇌경색으로 입원한 지 2주째이며 좌측 편마비가 있어 혼자서는 체위를 바꾸지 못한다. 식사량이 평소의 절반 정도로 줄었고 혈청 알부민 수치도 낮게 나왔다. 요실금이 있어서 기저귀를 사용하고 있으며 엉덩이 피부가 자주 젖어 있었다. Braden 척도로 사정했을 때 11점이어서 고위험군에 해당했다.',
@@ -112,7 +112,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c3', provider: 'gemini', url: 'https://gemini.google.com/share/2f8b6d4e91a7', turns: [
+      id: 'c3', provider: 'gemini', source: '대화-c3-gemini.pdf', turns: [
         {
           id: 'c3t1', label: 'borderline',
           prompt: 'SBAR로 인수인계 보고하는 방법 예시 알려줘',
@@ -145,7 +145,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c4', provider: 'chatgpt', url: 'https://chatgpt.com/share/68d2b7c0-1e95-8004-84fa-7a6d3b2c5e90', turns: [
+      id: 'c4', provider: 'chatgpt', source: '대화-c4-chatgpt.pdf', turns: [
         {
           id: 'c4t1', label: 'unrelated', traps: ['lexicalOverlap'],
           prompt: '병원 실습 끝나고 집 가는 길인데 배고파서 야식 먹고 싶다ㅠㅠ 근데 요즘 체중 늘어서 영양 관리 해야 되거든 뭐 먹을까',
@@ -174,7 +174,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c5', provider: 'chatgpt', url: 'https://chatgpt.com/share/68d2c9e2-5a07-8004-9d31-0b8e6f4a7c15', turns: [
+      id: 'c5', provider: 'chatgpt', source: '대화-c5-chatgpt.pdf', turns: [
         {
           id: 'c5t1', label: 'unrelated',
           prompt: '원신 신캐 픽업 뽑을지 고민 중인데 천장 기준으로 원석 얼마나 필요해?',
@@ -199,7 +199,7 @@ module.exports = {
       ],
     },
     {
-      id: 'c6', provider: 'claude', url: 'https://claude.ai/share/90e1d6c5-3b74-4f28-a0d9-7c52e8b4f136', turns: [
+      id: 'c6', provider: 'claude', source: '대화-c6-claude.pdf', turns: [
         {
           id: 'c6t1', label: 'unrelated',
           prompt: '기초통계 표준편차 계산 예제 하나만 풀어줘. 데이터가 2, 4, 4, 4, 5, 5, 7, 9야',

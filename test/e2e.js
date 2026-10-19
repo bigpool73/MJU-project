@@ -396,6 +396,35 @@ const cardRels = (page) => page.$$eval('#turnCards .turn-card', (els) => els.map
   });
 
   // 다크 모드
+  await item('P', '인쇄·PDF 저장: 토글을 꺼 둬도 표시·범례·펼친 원문·출처 표가 PDF에 들어가고, 인쇄 뒤 원상 복구', async () => {
+    const { execFileSync } = require('child_process');
+    const pg = await newPage();
+    await pg.goto(BASE);
+    await pg.click('#btnDemo'); await pg.waitForSelector('#turnCards .turn-card');
+    await pg.click('#btnNext'); await pg.waitForSelector('#report .body-text');
+    await pg.locator('#report .ai-toggle').uncheck();
+    const st = () => pg.evaluate(() => ({ on: document.querySelector('#report .body-text').classList.contains('mark-on'), open: document.querySelectorAll('#report details[open]').length, total: document.querySelectorAll('#report details').length, checked: document.querySelector('#report .ai-toggle').checked }));
+    const before = await st();
+    assert(!before.on && before.open === 0 && before.total > 0, JSON.stringify(before));
+    await pg.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+    const during = await st();
+    assert(during.on && during.open === during.total, '인쇄 중 상태 ' + JSON.stringify(during));
+    await pg.emulateMedia({ media: 'print' });
+    const tmp = path.join(require('os').tmpdir(), `e2e-print-${process.pid}.pdf`);
+    await pg.pdf({ path: tmp, format: 'A4', printBackground: true });
+    await pg.emulateMedia({ media: 'screen' });
+    await pg.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+    const after = await st();
+    assert(!after.on && after.open === 0 && !after.checked, '인쇄 뒤 복구 ' + JSON.stringify(after));
+    let txt = '';
+    try { txt = execFileSync('pdftotext', ['-layout', tmp, '-'], { encoding: 'utf8' }); } catch { txt = null; }
+    fs.rmSync(tmp, { force: true });
+    if (txt !== null) {
+      const flat = txt.replace(/\s+/g, ' ');
+      for (const k of ['그대로 반영', '수정 반영', '학생 원문 교정', '직접 작성', 'AI 반영으로 표시된 문장과 출처', '학생의 프롬프트', 'AI 응답']) assert(flat.includes(k), `PDF에 '${k}' 없음`);
+    }
+    await pg.close();
+  });
   await item('Dark', '다크 모드 화면 확인(로고 흰 알약)', async () => {
     const dk = await newPage({ colorScheme: 'dark' });
     await dk.goto(BASE);

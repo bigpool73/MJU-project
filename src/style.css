@@ -243,3 +243,17 @@ details.claude-guide li { margin: 4px 0; }
 .guide-figs figure:first-child { flex: 1 1 280px; }
 .guide-figs figure:last-child { flex: 0 1 220px; }
 .guide-figs figcaption { margin-top: 4px; font-size: .8rem; color: var(--muted); }
+
+/* ---- AI 반영 문장 출처 표 (인쇄물에서는 문장을 눌러 출처를 볼 수 없다) ---- */
+.report h4 { margin: 14px 0 6px; font-size: .95rem; }
+.report .src-table { font-size: .82rem; }
+.report .src-table { table-layout: fixed; }
+.report .src-table td, .report .src-table th { width: auto; overflow-wrap: anywhere; }
+.report .src-table th:nth-child(1), .report .src-table td:nth-child(1) { width: 9%; white-space: nowrap; }
+.report .src-table th:nth-child(2), .report .src-table td:nth-child(2) { width: 17%; white-space: nowrap; }
+.report .src-table th:nth-child(3) { width: 33%; }
+.report .src-table th:nth-child(4) { width: 29%; }
+.report .src-table th:nth-child(5), .report .src-table td:nth-child(5) { width: 12%; white-space: nowrap; }
+.report .src-table tr { break-inside: avoid; }
+.report details > summary { cursor: pointer; }
+@media print { .report details > summary { list-style: none; } .report details > summary::-webkit-details-marker { display: none; } }

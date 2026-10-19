@@ -589,7 +589,7 @@
     refresh();
     void doc; void R;
     return [
-      h('h2', null, '4. 제출'),
+      h('h2', { class: 'no-print' }, '4. 제출'),
       h('div', { class: 'no-print' },
         h('ol', { class: 'guide' },
           h('li', null, '아래 성찰을 적습니다(선택).'),
@@ -704,6 +704,15 @@
       if (!text || text.classList.contains('mark-on')) return;
       text.classList.add('mark-on'); if (legend) legend.hidden = false;
       printUndo.push(() => { text.classList.remove('mark-on'); if (legend) legend.hidden = true; });
+    });
+    // Chrome은 @page 여백이 0이 아니면 머리글(날짜·문서 제목)·바닥글(주소·쪽번호)을 붙인다. 그래서 여백을 0으로 하고,
+    // 쪽마다 위·아래·좌우 여백은 표의 머리·바닥 행(쪽마다 반복된다)으로 만든다.
+    document.querySelectorAll('.report').forEach((rep) => {
+      if (rep.parentElement && rep.parentElement.classList.contains('pf-cell')) return;
+      const t = document.createElement('table'), mk = (part, cls) => { const g = document.createElement(part), r = g.insertRow(), c = r.insertCell(); c.className = cls; t.append(g); return c; };
+      t.className = 'pf'; mk('thead', 'pf-top'); const body = mk('tbody', 'pf-cell'); mk('tfoot', 'pf-bottom');
+      rep.parentNode.insertBefore(t, rep); body.append(rep);
+      printUndo.push(() => { t.parentNode.insertBefore(rep, t); t.remove(); });
     });
     document.querySelectorAll('.report details:not([open])').forEach((d) => {
       d.open = true; printUndo.push(() => { d.open = false; });

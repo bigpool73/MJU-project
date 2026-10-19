@@ -149,6 +149,22 @@ const cardRels = (page) => page.$$eval('#turnCards .turn-card', (els) => els.map
     assert((await stepNo(page)) === '2', '단계 표시로 건너뜀');
   });
 
+  await item('Gd', 'Claude PDF 만들기 안내: 확장 프로그램 링크·사진 2장·PDF (via print) 안내', async () => {
+    const det = page.locator('details.claude-guide');
+    assert((await det.count()) === 1, '안내 없음');
+    await det.locator('summary').click();
+    const txt = await det.innerText();
+    assert(/Claude Exporter/.test(txt) && /PDF \(via print\)/.test(txt) && /Chrome에 추가/.test(txt), txt.slice(0, 120));
+    const a = det.locator('a');
+    assert((await a.getAttribute('href')).startsWith('https://chromewebstore.google.com/'), '스토어 링크');
+    assert((await a.getAttribute('rel')).includes('noopener'), 'rel');
+    await page.waitForFunction(() => [...document.querySelectorAll('details.claude-guide img')].every((i) => i.complete && i.naturalWidth > 0));
+    assert((await det.locator('img').count()) === 2, '사진 수');
+    for (const i of await det.locator('img').all()) assert(((await i.getAttribute('alt')) || '').length > 5, 'alt 없음');
+    await shot(page, 'step2-claude-guide');
+    await det.locator('summary').click();
+  });
+
   // (E) 업로드·분석 (역할 표지 있는 PDF만)
   await item('E1', '과제 PDF 업로드 시 본문 추출', async () => {
     await page.setInputFiles('#assignFile', fixture('h-report.pdf'));

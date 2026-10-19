@@ -415,6 +415,9 @@ const cardRels = (page) => page.$$eval('#turnCards .turn-card', (els) => els.map
     assert(pageMargin === '0px' || pageMargin === '0', '@page 여백 ' + pageMargin);
     assert(await pg.evaluate(() => { const h = [...document.querySelectorAll('#stage h2')].find((x) => x.textContent.includes('4. 제출')); return !h || getComputedStyle(h).display === 'none'; }), "'4. 제출' 제목이 인쇄에 남음");
     assert(await pg.evaluate(() => !!document.querySelector('#report')?.closest('table.pf')), '쪽 여백 표로 감싸지지 않음');
+    // 쪽 여백용 표의 좌우 여백이 내역서 안의 표 칸으로 번지면 글자가 칸 밖으로 밀린다 (실제로 한 번 그랬다).
+    const innerPad = await pg.evaluate(() => { const td = document.querySelector('#report table:not(.pf) td'); return td ? parseFloat(getComputedStyle(td).paddingLeft) : 0; });
+    assert(innerPad < 20, '내역서 안 표 칸의 왼쪽 여백 ' + innerPad + 'px');
     const tmp = path.join(require('os').tmpdir(), `e2e-print-${process.pid}.pdf`);
     await pg.pdf({ path: tmp, format: 'A4', printBackground: true });
     await pg.emulateMedia({ media: 'screen' });

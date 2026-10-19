@@ -231,7 +231,7 @@ details.paste summary { cursor: pointer; font-weight: 600; font-size: .9rem; }
   .report .turn-card pre { max-height: none; }
   @page { size: A4; margin: 0; }   /* 여백 0: Chrome의 자동 머리글·바닥글(날짜, 문서 제목, 주소, 쪽번호)이 붙지 않는다 */
   .pf { width: 100%; border-collapse: collapse; }
-  .pf td { padding: 0 14mm; }
+  .pf > tbody > tr > td.pf-cell { padding: 0 14mm; }   /* 내역서 안의 표 칸에는 적용되지 않도록 자식 선택자로 한정 */
   .pf td.pf-top { height: 7mm; padding: 0; }
   .pf td.pf-bottom { height: 11mm; padding: 0; }
   .pf td.pf-cell { vertical-align: top; }

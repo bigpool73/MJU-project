@@ -396,6 +396,20 @@
       legend, text, panel);
   }
 
+  /** AI 반영으로 표시된 문장과 출처 대화. PDF에서는 문장을 눌러 볼 수 없어서 표로 싣는다. */
+  function sourceTable(R, doc) {
+    const rows = R.sentences.filter((x) => x.kind !== 'original');
+    if (!rows.length) return h('p', { class: 'hint', id: 'srcTable' }, '표시된 문장이 없습니다. 겹침이 확인된 문장이 없습니다.');
+    const clip = (t) => (t.length > 46 ? `${t.slice(0, 46)}…` : t);
+    return h('div', { id: 'srcTable' },
+      h('h4', null, 'AI 반영으로 표시된 문장과 출처'),
+      h('table', { class: 'src-table' },
+        h('thead', null, h('tr', null, ['번호', '구분', '문장(앞부분)', '출처 대화', '겹침'].map((t) => h('th', null, t)))),
+        h('tbody', null, rows.map((x) => h('tr', null,
+          h('td', null, String(x.idx + 1)), h('td', null, KIND[x.kind].label), h('td', null, clip(x.text)),
+          h('td', null, x.source ? sourceLabel(doc, x.source) : '-'), h('td', null, pct(x.score)))))));
+  }
+
   // ------------------------------------------------------------ 대화 카드
   function turnCard(tr, doc, opt) {
     const c = doc.conversations[tr.convIndex];
@@ -541,6 +555,7 @@
       R.turns.length ? R.turns.map((tr) => turnCard(tr, doc, { editable: false })) : h('p', null, '첨부된 대화가 없습니다.'),
       h('h3', null, '4. 과제 본문 (AI 반영 부분 표시)'),
       bodyViewer(R, doc, true),
+      sourceTable(R, doc),
       h('h3', null, '5. 삭제 기록'),
       del.length
         ? [h('p', { id: 'delSummary' }, `연관도가 낮아 학생이 삭제한 대화 ${del.length}건 (글자 수 합계 ${del.reduce((a, d) => a + d.chars, 0).toLocaleString()}자). 삭제된 대화의 내용은 남기지 않았습니다.`),
@@ -679,6 +694,22 @@
     const dirty = S.doc.meta.student || S.doc.submission.text || S.doc.conversations.length;
     if (dirty) askConfirm('지금 입력한 내용이 예시 데이터로 바뀝니다. 계속할까요?', '예시로 바꾸기', load); else load();
   });
+
+  // 인쇄·PDF 저장: 내역서 안의 토글은 모두 켜고 접힌 항목은 모두 펼친다. 버튼과 Ctrl+P 모두 이 이벤트를 거친다.
+  let printUndo = [];
+  window.addEventListener('beforeprint', () => {
+    printUndo.forEach((f) => f()); printUndo = [];
+    document.querySelectorAll('.report .body-viewer').forEach((v) => {
+      const text = v.querySelector('.body-text'), legend = v.querySelector('.legend');
+      if (!text || text.classList.contains('mark-on')) return;
+      text.classList.add('mark-on'); if (legend) legend.hidden = false;
+      printUndo.push(() => { text.classList.remove('mark-on'); if (legend) legend.hidden = true; });
+    });
+    document.querySelectorAll('.report details:not([open])').forEach((d) => {
+      d.open = true; printUndo.push(() => { d.open = false; });
+    });
+  });
+  window.addEventListener('afterprint', () => { printUndo.forEach((f) => f()); printUndo = []; });
 
   loadState();
   renderStage();

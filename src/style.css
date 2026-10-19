@@ -229,7 +229,14 @@ details.paste summary { cursor: pointer; font-weight: 600; font-size: .9rem; }
   main { max-width: none; padding: 0; }
   .report { border: 0; padding: 0; margin: 0; }
   .report .turn-card pre { max-height: none; }
-  @page { margin: 16mm; }
+  @page { size: A4; margin: 0; }   /* 여백 0: Chrome의 자동 머리글·바닥글(날짜, 문서 제목, 주소, 쪽번호)이 붙지 않는다 */
+  .pf { width: 100%; border-collapse: collapse; }
+  .pf td { padding: 0 14mm; }
+  .pf td.pf-top { height: 7mm; padding: 0; }
+  .pf td.pf-bottom { height: 11mm; padding: 0; }
+  .pf td.pf-cell { vertical-align: top; }
+  .report-logo { margin-top: 0; }
+  .report h3, .report h4 { break-after: avoid; }   /* 제목이 쪽 맨 아래에 홀로 남지 않게 */
 }
 
 /* ---- Claude PDF 만들기 안내 ---- */

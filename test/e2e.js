@@ -410,6 +410,11 @@ const cardRels = (page) => page.$$eval('#turnCards .turn-card', (els) => els.map
     const during = await st();
     assert(during.on && during.open === during.total, '인쇄 중 상태 ' + JSON.stringify(during));
     await pg.emulateMedia({ media: 'print' });
+    // Chrome 자동 머리글·바닥글(날짜, 문서 제목, 주소, 쪽번호)은 @page 여백이 0이어야 붙지 않는다. 화면용 제목 '4. 제출'도 인쇄에서 빠져야 한다.
+    const pageMargin = await pg.evaluate(() => { for (const sh of document.styleSheets) for (const r of sh.cssRules) { const inner = r.cssRules ? [...r.cssRules] : []; for (const x of [r, ...inner]) if (x.type === CSSRule.PAGE_RULE) return x.style.margin; } return null; });
+    assert(pageMargin === '0px' || pageMargin === '0', '@page 여백 ' + pageMargin);
+    assert(await pg.evaluate(() => { const h = [...document.querySelectorAll('#stage h2')].find((x) => x.textContent.includes('4. 제출')); return !h || getComputedStyle(h).display === 'none'; }), "'4. 제출' 제목이 인쇄에 남음");
+    assert(await pg.evaluate(() => !!document.querySelector('#report')?.closest('table.pf')), '쪽 여백 표로 감싸지지 않음');
     const tmp = path.join(require('os').tmpdir(), `e2e-print-${process.pid}.pdf`);
     await pg.pdf({ path: tmp, format: 'A4', printBackground: true });
     await pg.emulateMedia({ media: 'screen' });

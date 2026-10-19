@@ -517,6 +517,8 @@
   /** 본문 앞 2000자·뒤 1000자의 서비스 이름 등장 횟수로 추정한다. 추정일 뿐이다. */
   function guessProvider(text) {
     if (typeof text !== 'string' || !text) return 'other';
+    // Claude Exporter(Chrome 확장)가 만든 PDF: 본문에 서비스 이름이 없고 "HUMAN"/"ASSISTANT" 표지와 "Created <ISO 시각>" 줄이 있다 (실제 파일 1건에서 확인).
+    if (/^\s*HUMAN\s*$/m.test(text) && /^\s*ASSISTANT\s*$/m.test(text) && /^\s*Created \d{4}-\d{2}-\d{2}T/m.test(text.slice(0, 600))) return 'claude';
     const sample = text.length <= 3000 ? text : text.slice(0, 2000) + '\n' + text.slice(-1000);
     const score = {};
     for (const [name, res] of Object.entries(PROVIDER_PATTERNS)) {
@@ -579,7 +581,8 @@
     const Core = getCore();
     const Parse = getParse();
     const newId = Core && Core.newId ? Core.newId : () => Math.random().toString(36).slice(2, 10);
-    const t = typeof text === 'string' ? text : '';
+    // 확장 프로그램이 도구 사용 블록 자리에 끼워 넣는 안내 문구는 대화 내용이 아니다.
+    const t = (typeof text === 'string' ? text : '').replace(/`{3}[ \t]*\n\s*This block is not supported on your current device yet\.\s*\n\s*`{3}/g, '');
     const provider = o.provider || guessProvider(t);
     const base = { id: newId(), provider, source: o.fileName || '' };
     const parsed = Parse ? Parse.parseTranscript(t) : { ok: false, turns: [] };

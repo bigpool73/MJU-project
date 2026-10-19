@@ -94,6 +94,9 @@
   //    Ctrl+P로 저장한 14쪽 PDF에서 관찰했다. 표지는 따로 한 줄에 "내가 한 말:" / "ChatGPT 답변:" 으로 있고 본문은 다음 줄부터
   //    시작한다. 위 '나의 말' / 'ChatGPT의 말' 추정과는 달랐다(그 표기가 다른 화면 버전의 것인지는 모른다).
   //    영어 화면의 표지는 확인하지 못했다.
+  //  - 'HUMAN' / 'ASSISTANT': 확인됨 (2026-10-19). Claude Exporter(Chrome 확장)의 "PDF (via print)"로 만든 실제 13쪽 PDF에서 관찰했다.
+  //    대문자 표지가 콜론 없이 한 줄씩 있고, 맨 위에 제목과 "Created <ISO 시각>" 줄, 사용자 블록 안에 "ATTACHMENTS" 목록이 있다.
+  //    Claude 화면 자체의 인쇄본이나 다른 내보내기 도구의 모양은 확인하지 못했다.
   //  - 'User prompt' / 'Response': 확인됨 (2026-10-16). 사용자가 올린 실제 Gemini(gemini.google.com/app) 대화를
   //    Chrome 154에서 Ctrl+P로 저장한 PDF에서 관찰했다. 한국어 화면(hl=ko)인데도 표지는 영어로 나왔고, 표지 뒤 같은 줄에
   //    본문이 이어진다(예: "User prompt: 질문", "Response: 답변"). 대화가 여러 턴일 때의 모양은 한 턴짜리 파일만 봐서 모른다.

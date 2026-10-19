@@ -450,3 +450,33 @@ test('줄바꿈 위치가 달라도(단어 중간 포함) 같은 대화에서 �
   assert.equal(a.filter((k) => k === 'verbatim').length, 4, a.join());
   assert.equal(a.filter((k) => k === 'original').length, 3, a.join());
 });
+
+// 실제 Claude Exporter(Chrome 확장) PDF 1건(2026-10-19, Chrome 154 인쇄, 13쪽)의 구조를 따른다. 내용은 지어낸 것이다.
+// 맨 위에 제목과 "Created <ISO>" 줄, 대문자 "HUMAN"/"ASSISTANT" 표지가 한 줄씩, 첨부 목록은 "ATTACHMENTS", 도구 블록 자리에는 안내 문구가 들어간다.
+const CLAUDE_EXPORT = [
+  '도서관 이용 안내 작성', 'Created 2026-04-14T03:44:44.339827Z', '',
+  'HUMAN', '', '도서관 대출 규정을 정리해줘. 파일을 첨부할게.', '', 'ATTACHMENTS', '', '대출규정.pdf', '',
+  'ASSISTANT', '', '자료를 확인했어요!', '', '```', 'This block is not supported on your current device yet.', '```', '', '일반 도서는 14일 동안 대출할 수 있어요.', '',
+  'HUMAN', '', '질문: 연장은 가능한가요?', '답변: 한 번 가능', '',
+  'ASSISTANT', '', '네, 한 번 7일 연장할 수 있어요.',
+].join('\n');
+
+test('Claude Exporter PDF: HUMAN/ASSISTANT 표지로 턴을 나누고 서비스를 claude로 추정한다', () => {
+  assert.strictEqual(Pdf.guessProvider(CLAUDE_EXPORT), 'claude');
+  const c = Pdf.toConversation(CLAUDE_EXPORT, { fileName: 'x.pdf' });
+  assert.strictEqual(c.parsed, 'ok'); assert.strictEqual(c.provider, 'claude');
+  assert.strictEqual(c.turns.length, 2);
+  assert.match(c.turns[0].prompt, /^도서관 대출 규정을 정리해줘/);
+  assert.match(c.turns[0].response, /14일 동안 대출/);
+  assert.match(c.turns[1].prompt, /연장은 가능한가요/);
+});
+
+test('Claude Exporter PDF: 확장 프로그램이 넣은 "not supported" 안내 문구는 응답에서 빠진다', () => {
+  const c = Pdf.toConversation(CLAUDE_EXPORT, {});
+  assert.ok(!c.turns.some((t) => /not supported on your current device/.test(t.response)));
+  assert.ok(!/```/.test(c.turns[0].response));
+});
+
+test('guessProvider: HUMAN/ASSISTANT 만으로는 claude로 단정하지 않는다 (Created 줄이 있어야 함)', () => {
+  assert.notStrictEqual(Pdf.guessProvider('HUMAN\n질문\nASSISTANT\n답'), 'claude');
+});

@@ -295,7 +295,7 @@
         h('div', { class: 'guide-figs' },
           h('figure', null, h('img', { src: 'assets/guide-claude-1.png', alt: 'Chrome 웹 스토어의 Claude Exporter 확장 프로그램 화면', width: 480, height: 81, loading: 'lazy' }), h('figcaption', null, '① 확장 프로그램 설치 (Chrome 웹 스토어)')),
           h('figure', null, h('img', { src: 'assets/guide-claude-2.png', alt: '확장 프로그램 메뉴에서 PDF (via print) 항목을 붉은 테두리로 표시한 화면', width: 240, height: 347, loading: 'lazy' }), h('figcaption', null, '② 확장 프로그램 아이콘 → PDF (via print)'))),
-        h('p', { class: 'hint' }, '이 확장 프로그램은 학교나 Anthropic이 아닌 외부 개발자가 만든 것입니다. 설치 전에 요구하는 권한을 확인하세요. 저장된 PDF의 모양에 따라 질문과 답변을 구분하지 못할 수 있고, 그 경우 의존도가 높게 나올 수 있다는 경고가 표시됩니다.')),
+        h('p', { class: 'hint' }, '이 확장 프로그램은 학교나 Anthropic이 아닌 외부 개발자가 만든 것입니다. 설치 전에 요구하는 권한을 확인하세요. 이 확장 프로그램으로 만든 PDF는 질문과 답변이 구분되는 것을 확인했습니다. 구분하지 못하면 의존도가 높게 나올 수 있다는 경고가 표시됩니다.')),
       dropZone({ id: 'convFile', accept: '.pdf,application/pdf', multiple: true, onFiles: addConvFiles, text: '대화 PDF를 끌어다 놓으세요 (여러 개 가능)', pick: 'PDF 선택' }),
       T.busy.map((j) => h('div', { class: 'job', role: 'status' }, j.total ? `${j.name} 읽는 중… (${j.done}/${j.total}쪽)` : `${j.name} 읽는 중…`)),
       T.errors.map((e, i) => h('div', { class: 'job err', role: 'alert' }, h('button', { type: 'button', class: 'x', 'aria-label': '안내 닫기', onclick: () => { T.errors.splice(i, 1); renderConvs(); } }, '닫기'), h('b', null, `${e.name} `), e.notes.join(' '))),

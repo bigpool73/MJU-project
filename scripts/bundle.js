@@ -38,6 +38,7 @@ html = html.replace(/<script src="([^"]+)"><\/script>/g, (_, p) => `<script>\n${
 // 화면 JS 안의 로고 경로(내역서 <img>)와 정적 <img>
 const logo = dataUri('assets/mju-logo.png', 'image/png');
 html = html.split('assets/mju-logo.png').join(logo);
+for (const g of ['assets/guide-claude-1.png', 'assets/guide-claude-2.png']) html = html.split(g).join(dataUri(g, 'image/png'));
 
 fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
 fs.writeFileSync(out, html);

@@ -156,6 +156,26 @@ const cardRels = (page) => page.$$eval('#turnCards .turn-card', (els) => els.map
     const v = await page.inputValue('#submissionText');
     assert(/도서관/.test(v), v.slice(0, 80));
   });
+  await item('E1b', '과제 워드(.docx)·한글(.hwpx, .hwp) 업로드 시 본문 추출, 표 칸 포함', async () => {
+    const DOCFX = path.join(__dirname, 'doc-fixtures');
+    const cases = [['basic.docx', /도서관 야간 개방/, '오후 10시까지'], ['basic.hwpx', /학내 공용 자전거/, '칸B'], ['basic.hwp', /졸업작품 전시/, '표 안의 칸 하나']];
+    for (const [f, re, cell] of cases) {
+      await page.setInputFiles('#assignFile', path.join(DOCFX, f));
+      await page.waitForFunction((r) => new RegExp(r).test(document.querySelector('#submissionText').value), re.source, { timeout: 15000 });
+      const v = await page.inputValue('#submissionText');
+      assert(v.includes(cell), `${f}: '${cell}' 없음`);
+      assert(!/[捤獥]/.test(v), `${f}: 제어 정보가 글자로 읽힘`);
+      const info = await page.textContent('#assignBox');
+      assert(/자를 읽었습니다/.test(info) && /빠진 부분/.test(info), `${f}: 확인 안내 없음`);
+    }
+    // 읽을 수 없는 파일은 이유가 보이고 본문은 그대로
+    const before = await page.inputValue('#submissionText');
+    for (const [f, re] of [['encrypted.hwp', /암호/], ['distribution.hwp', /배포용/], ['truncated.docx', /읽지 못했습니다/]]) {
+      await page.setInputFiles('#assignFile', path.join(DOCFX, f));
+      await page.waitForFunction((r) => new RegExp(r).test(document.querySelector('#assignBox .job.err')?.textContent || ''), re.source, { timeout: 10000 });
+    }
+    assert((await page.inputValue('#submissionText')) === before, '실패한 파일이 본문을 바꿈');
+  });
   await item('E2', '과제 .txt 업로드와 AI 대화 PDF(표지 있음) 추출·표시', async () => {
     await page.setInputFiles('#assignFile', { name: '과제.txt', mimeType: 'text/plain', buffer: Buffer.from(assignText, 'utf8') });
     await page.waitForFunction((t) => document.querySelector('#submissionText').value.startsWith(t), assignText.slice(0, 20));
@@ -374,13 +394,18 @@ const cardRels = (page) => page.$$eval('#turnCards .turn-card', (els) => els.map
   });
 
   // file:// 과 샌드박스 iframe 번들
-  await item('File', 'file:// 로 열어도 PDF 추출 동작 (fake worker 폴백)', async () => {
+  await item('File', 'file:// 로 열어도 PDF·워드·한글 추출 동작 (fake worker 폴백)', async () => {
     const f = await newPage();
     await f.goto('file://' + path.join(ROOT, 'index.html'));
     await fillMeta(f);
     await f.click('#btnNext');
     await f.setInputFiles('#convFile', fixture('a-ko-labels.pdf'));
     await f.waitForFunction(() => document.querySelectorAll('.conv-item').length === 1, null, { timeout: 20000 });
+    // 압축 해제는 Blob 스트림이 file:// 에서 막히고, Chrome은 압축 뒤 여분 바이트를 오류로 본다. 둘 다 여기서 걸러진다.
+    for (const [fn, cell] of [['basic.docx', '오후 10시까지'], ['trailing-junk.hwp', '표 안의 칸 하나'], ['basic.hwpx', '칸B']]) {
+      await f.setInputFiles('#assignFile', path.join(__dirname, 'doc-fixtures', fn));
+      await f.waitForFunction((c) => document.querySelector('#submissionText').value.includes(c), cell, { timeout: 15000 });
+    }
     assert(await f.evaluate(() => document.querySelector('.brand-logo').naturalWidth > 0), 'file:// 로고');
     await f.close();
   });

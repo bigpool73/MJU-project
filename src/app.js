@@ -211,11 +211,11 @@
     const count = h('span', { class: 'count' }, `${S.doc.submission.text.length.toLocaleString()}자`);
     fill(box,
       h('h3', null, 'A. 과제 결과물 ', h('span', { class: 'req', 'aria-hidden': 'true' }, '*')),
-      dropZone({ id: 'assignFile', accept: '.pdf,.txt,.md,application/pdf,text/plain,text/markdown', multiple: false, locked: locked(), onFiles: (fs) => addAssignment(fs[0]),
-        text: 'PDF, .txt, .md 파일을 끌어다 놓으세요', pick: '파일 선택' }),
+      dropZone({ id: 'assignFile', accept: '.pdf,.hwp,.hwpx,.docx,.doc,.txt,.md,application/pdf,text/plain,text/markdown', multiple: false, locked: locked(), onFiles: (fs) => addAssignment(fs[0]),
+        text: 'PDF, 한글(.hwp·.hwpx), 워드(.docx), .txt 파일을 끌어다 놓으세요', pick: '파일 선택' }),
       T.assignBusy ? h('div', { class: 'job' }, T.assignBusy) : null,
       T.assignMsg ? h('div', { class: `job${T.assignMsg.err ? ' err' : ''}`, role: T.assignMsg.err ? 'alert' : 'status' }, T.assignMsg.text) : null,
-      af ? h('p', { class: 'hint' }, `불러온 파일: ${af.name}${af.pages ? ` · ${af.pages}쪽` : ''}${af.edited ? ' (이후 직접 수정함)' : ''}`) : null,
+      af ? h('p', { class: 'hint' }, `불러온 파일: ${af.name}${af.pages ? ` · ${af.pages}쪽` : ''}${af.fmt ? ` · ${{ docx: '워드', hwp: '한글', hwpx: '한글(hwpx)' }[af.fmt] || af.fmt} 문서` : ''}${af.edited ? ' (이후 직접 수정함)' : ''}`) : null,
       locked() ? h('div', { class: 'notice warn' }, '삭제 기록이 있어 과제 본문은 바꿀 수 없습니다. 바꾸려면 "처음부터 다시"를 눌러 주세요.') : null,
       h('label', null, '과제 본문 (붙여넣기·수정 가능) ', count, ta));
   }
@@ -225,7 +225,7 @@
     const name = file.name, low = name.toLowerCase();
     T.assignMsg = null;
     try {
-      let text, pages = 0;
+      let text, pages = 0, fmt = '';
       if (/\.(txt|md)$/.test(low) || file.type.startsWith('text/')) {
         T.assignBusy = `${name} 읽는 중…`; renderAssign();
         text = await file.text();
@@ -236,12 +236,18 @@
         if (!r.ok) { T.assignBusy = null; T.assignMsg = { text: `${name}: ${r.notes.join(' ')}`, err: true }; renderAssign(); return; }
         text = r.text; pages = r.pageCount;
         if (r.notes.length) T.assignMsg = { text: r.notes.join(' '), err: false };
+      } else if (/\.(docx|doc|hwp|hwpx)$/.test(low)) {
+        T.assignBusy = `${name} 읽는 중…`; renderAssign();
+        const r = await Docs.extract(await file.arrayBuffer(), name);
+        if (!r.ok) { T.assignBusy = null; T.assignMsg = { text: `${name}: ${r.notes.join(' ')}`, err: true }; renderAssign(); return; }
+        text = r.text; fmt = r.format;
+        T.assignMsg = { text: `${r.text.length.toLocaleString()}자를 읽었습니다. 아래 본문 칸에서 빠진 부분이 없는지 확인해 주세요. 표·글상자 안의 글은 순서대로 이어서 읽고, 그림 속 글자는 읽지 못합니다.`, err: false };
       } else {
-        T.assignMsg = { text: `${name}: 지원하지 않는 형식입니다. PDF, .txt, .md 파일을 올리거나 본문을 붙여넣어 주세요.`, err: true };
+        T.assignMsg = { text: `${name}: 지원하지 않는 형식입니다. PDF, 한글(.hwp·.hwpx), 워드(.docx), .txt 파일을 올리거나 본문을 붙여넣어 주세요.`, err: true };
         renderAssign(); return;
       }
       S.doc.submission.text = text.replace(/\r\n?/g, '\n').trim();
-      S.ui.assignFile = { name, pages };
+      S.ui.assignFile = { name, pages, fmt };
       save();
       live(`${name} 불러옴`);
     } catch (e) {
